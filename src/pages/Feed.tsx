@@ -49,7 +49,7 @@ const { data: savedData } = useQuery({
 })
   if (isLoading) {
     return (
-      <ThreeDots height="80" width="80" color='#2563eb`' ariaLabel="three-dots-loading" visible={true} />
+      <ThreeDots height="80" width="80" color="#2563eb" ariaLabel="three-dots-loading" visible={true} />
     )
   }
 

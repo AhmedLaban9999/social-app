@@ -45,10 +45,8 @@ async function getPostComment(id) {
             Authorization:`Bearer ${localStorage.getItem('usertoken')}`
         }
     })
-    console.log(data)
     setcomment(data.data.comments)
-    
-}console.log("topComment:", topComment);
+}
 function sharePost() {
   return axios.post(
     `https://route-posts.routemisr.com/posts/${_id}/share`,

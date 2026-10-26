@@ -1,11 +1,30 @@
 
 import { Navigate } from 'react-router'
+import type { ReactNode } from 'react'
+import { useContext } from 'react'
+import { AuthContext } from '../../Context/AuthContext'
+import { ThreeDots } from 'react-loader-spinner'
 
+interface Props {
+  children: ReactNode
+}
 
-export default function ProtectedRouting({children}:any) {
-    if(localStorage.getItem('usertoken')){
-  
-  return children  }else{
-    return <Navigate to='/Login'/>
+// Fix #3: Wait for auth state to hydrate before deciding to redirect.
+// Without this check there is a flash-to-login on every hard refresh.
+export default function ProtectedRouting({ children }: Props) {
+  const { isLoading } = useContext(AuthContext)
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <ThreeDots height="60" width="60" color="#2563eb" ariaLabel="loading" visible />
+      </div>
+    )
   }
+
+  if (localStorage.getItem('usertoken')) {
+    return children
+  }
+
+  return <Navigate to='/Login' />
 }

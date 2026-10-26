@@ -16,7 +16,6 @@ export default function SuggestedFriends() {
     queryKey:['friends',search],
     queryFn:followSugestion
 })
-console.log(data)
 function followSugestion(){
     return axios.get(`https://route-posts.routemisr.com/users/suggestions?limit=5&q=${search}`,{
          headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }

@@ -50,7 +50,7 @@ function getUnreadNotification() {
   <Navbar fluid className="bg-transparent px-0 dark:bg-transparent">
 
 <div className="flex items-center justify-between w-full gap-4">
-      <NavbarBrand href="https://flowbite-react.com">
+      <NavbarBrand href="/Feed">
         <img src={imglogo} className="mr-3 h-6 sm:h-9 rounded-2xl" alt="Flowbite React Logo" />
         <span className="hidden lg:inline self-center leading-tight lg:whitespace-nowrap text-[20px] font-bold dark:text-white">Route Posts</span>
       </NavbarBrand>

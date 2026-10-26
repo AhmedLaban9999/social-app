@@ -26,7 +26,7 @@ const validschema =zod.object({
 
 type user =zod.infer<typeof validschema>
 
- const {handleSubmit,register,setValue,formState:{errors}} =useForm<user>(
+ const {handleSubmit,register,formState:{errors}} =useForm<user>(
     { defaultValues:{
     
     email:'',
@@ -48,7 +48,6 @@ Swal.fire({
 
 })
 setuser(data?.data?.user)
-console.log(data.data)
 localStorage.setItem('usertoken',data.data.token)
 setTimeout(()=>{
     nav('/Profile')

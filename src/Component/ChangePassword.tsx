@@ -27,7 +27,7 @@ const  { handleSubmit, register,reset ,formState: { errors } } = useForm<passwor
   resolver:zodResolver(validschema)
 })
 const {mutate, isPending}=useMutation({
-    mutationFn:ChangePassword,
+    mutationFn:changePasswordApi,
     onSuccess:(res)=>{
           localStorage.setItem('usertoken', res.data.data.token)
     reset()
@@ -39,7 +39,7 @@ const {mutate, isPending}=useMutation({
     }
     }
 })
-function ChangePassword(values: passwordForm) {
+function changePasswordApi(values: passwordForm) {
 return axios.patch('https://route-posts.routemisr.com/users/change-password',{password:values.password,newPassword:values.newPassword},
      { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }}
 )

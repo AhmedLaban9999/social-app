@@ -44,7 +44,9 @@ const {mutate:handlecreateReply}=useMutation({
     mutationFn:createreply,
     onSuccess: () => {
   setreplytext('')
-  refresh()
+  // Fix #1: refresh() was called here but was never defined — runtime crash.
+  // Invalidate the replies query instead to re-fetch from the server.
+  queries.invalidateQueries({ queryKey: ['replies', comment._id] })
   refetchReplies()
 },
 })

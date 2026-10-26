@@ -22,7 +22,7 @@ export default function Profile() {
     })
 
   }
-  const myposts:post[]=data?.data.data.posts ?? []
+  const myposts: Post[] = data?.data.data.posts ?? []
  const queries=useQueryClient() 
 const[isactive,setactivetab]=useState('posts')
 const [showPhoto, setShowPhoto] = useState(false)

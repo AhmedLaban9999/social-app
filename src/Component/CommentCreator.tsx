@@ -33,8 +33,8 @@ setContent('')
 setPicture(null)
 setShowEmoji(false)
 refetch()
-}catch(err){
-      console.log(err.response?.message)
+}catch(err: any){
+      console.error(err.response?.data?.message)
 }
 
    

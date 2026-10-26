@@ -7,7 +7,6 @@ import {Bars} from 'react-loader-spinner'
 export default function PostsDetails() {
     
     const{id}=useParams()
-    console.log(id)
     const {isError,isLoading,error,data,refetch}=useQuery({
       queryKey:['postdetails',id],
       queryFn:getSinglePost
