@@ -47,7 +47,7 @@ queries.invalidateQueries({ queryKey: ['newposts'] })
 
     },
     onError:(err)=>{
-      if(axios.isAxiosError(err))console.log(err.response?.data)
+      if(axios.isAxiosError(err))console.error(err.response?.data)
     }
   })
  function handleCreatePost(){

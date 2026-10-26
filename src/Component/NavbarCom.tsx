@@ -10,7 +10,7 @@ import {
   
 } from "flowbite-react";
 import { useContext,useEffect,useState } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import type { User1 } from "../interfaces/posts";
 
@@ -50,7 +50,7 @@ function getUnreadNotification() {
   <Navbar fluid className="bg-transparent px-0 dark:bg-transparent">
 
 <div className="flex items-center justify-between w-full gap-4">
-      <NavbarBrand href="/Feed">
+      <NavbarBrand as={Link} to="/Feed">
         <img src={imglogo} className="mr-3 h-6 sm:h-9 rounded-2xl" alt="Flowbite React Logo" />
         <span className="hidden lg:inline self-center leading-tight lg:whitespace-nowrap text-[20px] font-bold dark:text-white">Route Posts</span>
       </NavbarBrand>

@@ -16,14 +16,19 @@ export default function AuthContextProvider({children}:any) {
         setuser(data.data.user)
         
   }catch(err){
-  console.log(err)
+    localStorage.removeItem('usertoken')
+    setuser(null)
+    console.error(err)
 } finally {
   setIsLoading(false)
 }
 } 
 useEffect(()=>{
-  if(localStorage.getItem('usertoken')){
-    getprofile(localStorage.getItem('usertoken'))
+  const token = localStorage.getItem('usertoken')
+  if(token){
+    getprofile(token)
+  } else {
+    setIsLoading(false)
   }
 },[])
   return (
