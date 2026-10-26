@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Button,Avatar } from "flowbite-react";
 import { useState ,useContext} from "react";
 import type { CommentItem } from "../../types/comment";
@@ -9,6 +8,9 @@ import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import CommentCard from "../comment/CommentCard";
+import { toggleLike, sharePost as sharePostApi } from "../../api/posts.api";
+import { getPostComments } from "../../api/comments.api";
+import { queryKeys } from "../../api/queryKeys";
 
 
 
@@ -23,44 +25,30 @@ const queries=useQueryClient()
 
 
      function HandleLike() {
-    return axios.put(`https://route-posts.routemisr.com/posts/${_id}/like`,'',
-      {
-        headers:{
-            Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-        }
-    }
-    )
+    return toggleLike(_id)
   }
   const {mutate,isPending} = useMutation({
     mutationFn:HandleLike,
     onSuccess:()=>{
-      queries.invalidateQueries({queryKey:['newposts']},
+      queries.invalidateQueries({queryKey:queryKeys.posts},
         
       )
     }
 
   })
 async function getPostComment(id) {
-    const {data} =await axios.get(`https://route-posts.routemisr.com/posts/${id}/comments?page=1&limit=10`,{
-        headers:{
-            Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-        }
-    })
+    const {data} =await getPostComments(id)
     setcomment(data.data.comments)
 }
 function sharePost() {
-  return axios.post(
-    `https://route-posts.routemisr.com/posts/${_id}/share`,
-    { body: shareText },
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return sharePostApi(_id, shareText)
 }
 const { mutate: handleShare, isPending: isSharing } = useMutation({
   mutationFn: sharePost,
   onSuccess: () => {
     setShareText('')
     setShowShare(false)
-    queries.invalidateQueries({ queryKey: ['newposts'] })
+    queries.invalidateQueries({ queryKey: queryKeys.posts })
   },
 })
   return (

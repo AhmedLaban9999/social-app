@@ -3,10 +3,17 @@ import type { CommentItem } from "../../types/comment";
 import dayjs from "dayjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
+import {
+  likeComment as likeCommentApi,
+  createReply as createReplyApi,
+  getReplies as getRepliesApi,
+  deleteComment as deleteCommentApi,
+  updateComment as updateCommentApi,
+} from "../../api/comments.api";
+import { queryKeys } from "../../api/queryKeys";
 
 
 interface CommentCardProps {
@@ -26,17 +33,13 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
   if (showreplies) inputelement.current?.focus()
 }, [showreplies])
     function likeComment(commentId: string) {
-  return axios.put(
-    `https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/like`,
-    {},
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return likeCommentApi(postId, commentId)
 }
 const { mutate: handleLikeComment } = useMutation({
   mutationFn: likeComment,
   onSuccess: () => {
 refetchReplies()
-    queries.invalidateQueries({ queryKey: ['newposts'] })
+    queries.invalidateQueries({ queryKey: queryKeys.posts })
   },
 })
 
@@ -46,7 +49,7 @@ const {mutate:handlecreateReply}=useMutation({
   setreplytext('')
   // Fix #1: refresh() was called here but was never defined — runtime crash.
   // Invalidate the replies query instead to re-fetch from the server.
-  queries.invalidateQueries({ queryKey: ['replies', comment._id] })
+  queries.invalidateQueries({ queryKey: queryKeys.replies(comment._id) })
   refetchReplies()
 },
 })
@@ -54,49 +57,40 @@ const {mutate:handlecreateReply}=useMutation({
 function createreply(text:string){
     const formdata= new FormData()
     formdata.append('content',text)
-return axios.post(`https://route-posts.routemisr.com/posts/${postId}/comments/${comment._id}/replies`,formdata,{
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
-})
+return createReplyApi(postId, comment._id, formdata)
 }
 const{data ,refetch: refetchReplies}=useQuery({
-    queryKey:['replies',comment._id],
+    queryKey:queryKeys.replies(comment._id),
     queryFn:getReplies,
     enabled: showreplies,
 })
 function getReplies() {
-  return axios.get(
-    `https://route-posts.routemisr.com/posts/${postId}/comments/${comment._id}/replies`,
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return getRepliesApi(postId, comment._id)
 } 
 const {mutate:handledeletecomment}= useMutation({
   mutationFn:deletecomment,
   onSuccess:()=>{
     refetch()
-  queries.invalidateQueries({ queryKey: ['newposts'] })
-  queries.invalidateQueries({ queryKey: ['postdetails'] })
-queries.invalidateQueries({ queryKey: ['userposts'] })
+  queries.invalidateQueries({ queryKey: queryKeys.posts })
+  queries.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
+queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
   }
 })
 function deletecomment(){
-  return axios.delete(`https://route-posts.routemisr.com/posts/${postId}/comments/${comment._id}`,{
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
-  })
+  return deleteCommentApi(postId, comment._id)
 }
 const {mutate:handleupdatecomment}=useMutation({
   mutationFn:updatecomment,
   onSuccess:()=>{
     setIsEditing(false)
     refetch()
-  queries.invalidateQueries({ queryKey: ['newposts'] })
+  queries.invalidateQueries({ queryKey: queryKeys.posts })
   }
 })
 function updatecomment(){
   const formdata =new FormData()
   formdata.append('content',edittext)
-  return axios.put(`https://route-posts.routemisr.com/posts/${postId}/comments/${comment._id}`,formdata,{
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
-  })
+  return updateCommentApi(postId, comment._id, formdata)
 }
 const replies:CommentItem[]= data?.data.data.replies ?? []
   return (

@@ -1,5 +1,4 @@
 
-import axios from 'axios'
 import PostCard from '../components/post/PostCard'
 import {useContext ,useState} from 'react'
 import { AuthContext } from '../context/AuthContext'
@@ -8,6 +7,9 @@ import CreatePost from '../components/post/CreatePost'
 import { useQuery } from '@tanstack/react-query'
 import { ThreeDots } from 'react-loader-spinner'
 import SuggestedFriends from '../components/friends/SuggestedFriends';
+import { getPosts as getPostsApi } from '../api/posts.api'
+import { getUserPosts, getBookmarks } from '../api/users.api'
+import { queryKeys } from '../api/queryKeys'
 
 const tabs = [
   { key: 'feed', label: 'Feed', icon: 'fa-regular fa-newspaper' },
@@ -21,30 +23,22 @@ export default function Feed() {
   const { userData } = useContext(AuthContext)
 
   function getPosts() {
-    return axios.get('https://route-posts.routemisr.com/posts', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-    })
+    return getPostsApi()
   }
 
   const { isError, isLoading, data, error } = useQuery({
-    queryKey: ['newposts'],
+    queryKey: queryKeys.posts,
     queryFn: getPosts,
   })
 
   const { data: myPostsData } = useQuery({
-    queryKey: ['userposts', userData?._id],
-    queryFn: () =>
-      axios.get(`https://route-posts.routemisr.com/users/${userData?._id}/posts`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-      }),
+    queryKey: queryKeys.userPosts(userData?._id),
+    queryFn: () => getUserPosts(userData?._id),
     enabled: !!userData,
   })
 const { data: savedData } = useQuery({
-  queryKey: ['bookmarks'],
-  queryFn: () =>
-    axios.get('https://route-posts.routemisr.com/users/bookmarks', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-    }),
+  queryKey: queryKeys.bookmarks,
+  queryFn: () => getBookmarks(),
   enabled: !!userData,
 })
   if (isLoading) {

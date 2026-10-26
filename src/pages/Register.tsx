@@ -3,8 +3,8 @@ import { useNavigate, NavLink } from "react-router";
 import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from "axios";
 import Swal from 'sweetalert2'
+import { signup } from "../api/auth.api";
 
 
 
@@ -51,7 +51,7 @@ type user =zod.infer<typeof validschema>
 })
 
  async   function handleApi(values: user){
- let data = await axios.post('https://route-posts.routemisr.com/users/signup',values).then((data)=>{
+ let data = await signup(values).then((data)=>{
 
 Swal.fire({
   icon: "success",

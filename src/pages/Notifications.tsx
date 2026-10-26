@@ -1,11 +1,17 @@
 import { Avatar } from 'flowbite-react'
 import type { Notification } from '../types/Notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
 import { Link } from 'react-router'
+import {
+  getNotifications,
+  getUnreadCount,
+  markNotificationRead,
+  markAllNotificationsRead,
+} from '../api/notifications.api'
+import { queryKeys } from '../api/queryKeys'
 
 dayjs.extend(relativeTime)
 
@@ -22,55 +28,42 @@ export default function Notifications() {
 
   // الإشعارات
   const { data } = useQuery({
-    queryKey: ['notifications'],
+    queryKey: queryKeys.notifications,
     queryFn: getNotification,
   })
   function getNotification() {
-    return axios.get(
-      `https://route-posts.routemisr.com/notifications?&page=1&limit=10`,
-      { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-    )
+    return getNotifications()
   }
   const notifications: Notification[] = data?.data.data.notifications ?? []
 
   const shownNotifications =
   fillter === 'unread' ? notifications.filter((n) => !n.isRead) : notifications
   const { data: unreadData } = useQuery({
-    queryKey: ['notifications', 'unread-count'],
+    queryKey: queryKeys.unreadCount,
     queryFn: getUnreadNotification,
   })
   function getUnreadNotification() {
-    return axios.get('https://route-posts.routemisr.com/notifications/unread-count', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-    })
+    return getUnreadCount()
   }
   const unreadcount: number = unreadData?.data.data.unreadCount ?? 0
 
   // Mark as read
   function markAsRead(id: string) {
-    return axios.patch(
-      `https://route-posts.routemisr.com/notifications/${id}/read`,
-      {},
-      { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-    )
+    return markNotificationRead(id)
   }
   const { mutate: handleisread } = useMutation({
     mutationFn: markAsRead,
     onSuccess: () => {
-      queries.invalidateQueries({ queryKey: ['notifications'] })
+      queries.invalidateQueries({ queryKey: queryKeys.notifications })
     },
   })
   function markAllAsRead() {
-  return axios.patch(
-    'https://route-posts.routemisr.com/notifications/read-all',
-    {},
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return markAllNotificationsRead()
 }
 const { mutate: handleReadAll } = useMutation({
   mutationFn: markAllAsRead,
   onSuccess: () => {
-    queries.invalidateQueries({ queryKey: ['notifications'] })
+    queries.invalidateQueries({ queryKey: queryKeys.notifications })
   },
 })
 

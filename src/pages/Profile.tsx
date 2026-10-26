@@ -2,9 +2,10 @@ import { useContext,useState } from 'react'
 import { Avatar } from 'flowbite-react'
 import type { Post, User1 } from '../types/posts'
 import { AuthContext } from '../context/AuthContext'
-import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import PostCard from '../components/post/PostCard'
+import { getUserPosts, uploadPhoto, uploadCover, getBookmarks } from '../api/users.api'
+import { queryKeys } from '../api/queryKeys'
 
 
 export default function Profile() {
@@ -12,14 +13,12 @@ export default function Profile() {
 
   const { userData ,setUserData}: { userData: User1 | null ;setUserData: (user: User1) => void } = useContext(AuthContext)
     const {data}=useQuery({
-    queryKey:['userposts',userData?._id],
+    queryKey:queryKeys.userPosts(userData?._id),
     queryFn:getmyposts,
     enabled:!!userData,
   })
     function getmyposts(){
-    return axios.get(`https://route-posts.routemisr.com/users/${userData?._id}/posts`,{
-       headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-    })
+    return getUserPosts(userData?._id)
 
   }
   const myposts: Post[] = data?.data.data.posts ?? []
@@ -29,41 +28,35 @@ const [showPhoto, setShowPhoto] = useState(false)
 function updatePhoto(photo:File){
   const formdata= new FormData()
 formdata.append('photo',photo)
-  return axios.put('https://route-posts.routemisr.com/users/upload-photo',formdata,{
-     headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return uploadPhoto(formdata)
 }
 const{mutate}=useMutation({
   mutationFn:updatePhoto,
 onSuccess: (res) => {
   if (userData)  setUserData({ ...userData, photo: res.data.data.photo })
-    queries.invalidateQueries({ queryKey: ['userposts'] })
+    queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
 },
 })
 function updatecover(cover:File){
   const formdata= new FormData()
 formdata.append('cover',cover)
-  return axios.put('https://route-posts.routemisr.com/users/upload-cover',formdata,{
-     headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return uploadCover(formdata)
 }
 const{mutate:handlecover}=useMutation({
   mutationFn:updatecover,
 onSuccess: (res) => {
   if (userData)  setUserData({ ...userData, cover: res.data.data.cover })
-    queries.invalidateQueries({ queryKey: ['userposts'] })
+    queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
 },
 })
 
 const {data: bookmarksData}=useQuery({
-  queryKey:['bookmarks'],
+  queryKey:queryKeys.bookmarks,
   queryFn:getbookmarks,
   enabled:!! userData
 })
 function getbookmarks(){
-  return axios.get(`https://route-posts.routemisr.com/users/bookmarks`,{
-     headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return getBookmarks()
 }
 const bookmarks:Post[]= bookmarksData?.data.data.bookmarks ?? []
   if (!userData) return null

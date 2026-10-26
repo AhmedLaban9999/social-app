@@ -1,49 +1,42 @@
 import { useParams } from 'react-router'
-import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Post, User1 } from '../types/posts'
 import { Avatar } from 'flowbite-react'
 import PostCard from '../components/post/PostCard'
+import { getUserProfile as getUserProfileApi, followUser, getUserPosts as getUserPostsApi } from '../api/users.api'
+import { queryKeys } from '../api/queryKeys'
 
 export default function UserProfile() {
     
   const { id } = useParams()
 function getUserProfile() {
-  return axios.get(`https://route-posts.routemisr.com/users/${id}/profile`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return getUserProfileApi(id)
 }
 const { data } = useQuery({
-  queryKey: ['userProfile', id],
+  queryKey: queryKeys.profile(id),
   queryFn: getUserProfile,
 })
 
 const user: User1 | undefined = data?.data.data.user
 const isFollowing: boolean = data?.data.data.isFollowing ?? false
 function toggleFollow() {
-  return axios.put(
-    `https://route-posts.routemisr.com/users/${id}/follow`,
-    {},
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return followUser(id)
 }
 const queries = useQueryClient()
 
 const { mutate: handleFollow, isPending } = useMutation({
   mutationFn: toggleFollow,
   onSuccess: () => {
-    queries.invalidateQueries({ queryKey: ['userProfile', id] })
-    queries.invalidateQueries({ queryKey: ['friends'] })
+    queries.invalidateQueries({ queryKey: queryKeys.profile(id) })
+    queries.invalidateQueries({ queryKey: queryKeys.suggestionsAll })
   },
 })
 function getUserPosts() {
-  return axios.get(`https://route-posts.routemisr.com/users/${id}/posts`, {
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return getUserPostsApi(id)
 }
 
 const { data: postsData } = useQuery({
-  queryKey: ['userposts', id],
+  queryKey: queryKeys.userPosts(id),
   queryFn: getUserPosts,
 })
 

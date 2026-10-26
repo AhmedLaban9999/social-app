@@ -4,11 +4,11 @@ import { Button, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from "axios";
 import Swal from 'sweetalert2'
 import { useNavigate, NavLink } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { signin } from "../api/auth.api";
 
 
 
@@ -38,7 +38,7 @@ type user =zod.infer<typeof validschema>
 })
 
     function handleApi(values: user){
-axios.post('https://route-posts.routemisr.com/users/signin',values).then(({data})=>{
+signin(values).then(({data})=>{
 
 Swal.fire({
   icon: "success",

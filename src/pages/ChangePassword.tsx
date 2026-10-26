@@ -2,9 +2,10 @@ import * as zod from 'zod'
 import {useState} from 'react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
+import { isAxiosError } from '../api/client';
+import { changePassword } from '../api/auth.api';
 
 export default function ChangePassword() {
     const [successMsg, setSuccessMsg] = useState('')
@@ -34,15 +35,13 @@ const {mutate, isPending}=useMutation({
  setSuccessMsg('Password changed successfully.')
     },
     onError:(err)=>{
-          if (axios.isAxiosError(err)) {
+          if (isAxiosError(err)) {
       Swal.fire({ icon: 'error', title: 'Error!', text: err.response?.data.message })
     }
     }
 })
 function changePasswordApi(values: passwordForm) {
-return axios.patch('https://route-posts.routemisr.com/users/change-password',{password:values.password,newPassword:values.newPassword},
-     { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }}
-)
+return changePassword({password:values.password,newPassword:values.newPassword})
 }
 function handleApi(values: passwordForm) {
   mutate(values)

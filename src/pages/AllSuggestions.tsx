@@ -2,8 +2,9 @@ import { Link } from 'react-router'
 import { Avatar } from 'flowbite-react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react';
-import axios from 'axios';
 import type {Friend}  from '../types/Friends'
+import { getSuggestions } from '../api/users.api'
+import { queryKeys } from '../api/queryKeys'
 
 
 export default function AllSuggestions() {
@@ -11,15 +12,13 @@ export default function AllSuggestions() {
 
   const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
 
-    queryKey:['friends','all',search],
+    queryKey:queryKeys.allSuggestions(search),
    queryFn: ({ pageParam }) => getSuggestedFriends(pageParam),
    initialPageParam: 1,
    getNextPageParam: (lastPage) => lastPage.data.meta.pagination.nextPage,
   })
   function getSuggestedFriends(page:number){
-   return axios.get(`https://route-posts.routemisr.com/users/suggestions?limit=20&q=${search}&page=${page}`,{
-        headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
-    })
+   return getSuggestions(search, 20, page)
   
   }
     const friends: Friend[] = data?.pages.flatMap((page) => page.data.data.suggestions) ?? []

@@ -16,8 +16,9 @@ import type { User1 } from "../../types/posts";
 
 
 import imglogo from '../../assets/route.png'
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { getUnreadCount } from "../../api/notifications.api";
+import { queryKeys } from "../../api/queryKeys";
 
 export default function Navbar() {
 let { userData, setUserData, isLoading }: { userData: User1 | null; setUserData: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
@@ -37,15 +38,13 @@ setUserData(null)
 navg('/Login')
 }
 const { data: unreadData } = useQuery({
-  queryKey: ['notifications', 'unread-count'],
+  queryKey: queryKeys.unreadCount,
   queryFn: getUnreadNotification,
   enabled: !!userData,
 })
 const unreadcount: number = unreadData?.data.data.unreadCount ?? 0
 function getUnreadNotification() {
-  return axios.get('https://route-posts.routemisr.com/notifications/unread-count', {
-    headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` },
-  })
+  return getUnreadCount()
 }
   return (<>
 <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">

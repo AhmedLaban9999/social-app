@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
-import axios from "axios";
+import { createComment } from "../../api/comments.api";
 
 interface CommentCreatorProps {
   name: string;
@@ -24,11 +24,7 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
     const formData =new FormData()
     if(content.trim())formData.append('content',content)
         if (picture) formData.append('image', picture)
- try{const {data}= await axios.post(`https://route-posts.routemisr.com/posts/${postId}/comments`,formData,{
- headers:{
-      Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-    }
-})
+ try{const {data}= await createComment(postId, formData)
 setContent('')
 setPicture(null)
 setShowEmoji(false)

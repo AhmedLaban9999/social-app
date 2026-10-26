@@ -1,22 +1,19 @@
-import axios from 'axios'
 import { Link, useParams } from 'react-router'
 import PostCard from '../components/post/PostCard'
 import type { Post } from '../types/posts'
 import { useQuery } from '@tanstack/react-query'
 import {Bars} from 'react-loader-spinner'
+import { getPost } from '../api/posts.api'
+import { queryKeys } from '../api/queryKeys'
 export default function PostsDetails() {
     
     const{id}=useParams()
     const {isError,isLoading,error,data,refetch}=useQuery({
-      queryKey:['postdetails',id],
+      queryKey:queryKeys.postDetails(id),
       queryFn:getSinglePost
     })
     function getSinglePost() {
-      return axios.get(`https://route-posts.routemisr.com/posts/${id}`,{
-             headers:{
-      Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-    }
-        })
+      return getPost(id)
        
     }
     if(isLoading){

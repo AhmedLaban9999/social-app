@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Avatar } from "flowbite-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { Link } from "react-router";
+import { getSuggestions, followUser as followUserApi } from "../../api/users.api";
+import { queryKeys } from "../../api/queryKeys";
 
 
 import type { Friend } from '../../types/Friends'
@@ -13,26 +14,20 @@ export default function SuggestedFriends() {
     const queries=useQueryClient()
      const [search, setSearch] = useState("");
     const {data}=useQuery({
-    queryKey:['friends',search],
+    queryKey:queryKeys.suggestions(search),
     queryFn:followSugestion
 })
 function followSugestion(){
-    return axios.get(`https://route-posts.routemisr.com/users/suggestions?limit=5&q=${search}`,{
-         headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` }
-    })
+    return getSuggestions(search, 5)
 }
 function followUser(userId: string) {
-  return axios.put(
-    `https://route-posts.routemisr.com/users/${userId}/follow`,
-    {},
-    { headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}` } }
-  )
+  return followUserApi(userId)
 }
  
 const {mutate}=useMutation({
     mutationFn:followUser,
     onSuccess:()=>{
-        queries.invalidateQueries({queryKey:['friends']})
+        queries.invalidateQueries({queryKey:queryKeys.suggestionsAll})
      
     }
 })

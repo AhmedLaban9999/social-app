@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Avatar, Button, Card, Dropdown, DropdownItem, Textarea } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "../../api/client";
+import { createPost } from "../../api/posts.api";
+import { queryKeys } from "../../api/queryKeys";
 
 
 interface CreatePostProps {
@@ -41,13 +43,13 @@ Swal.fire({
   confirmButtonText:'cool',
   timer:1000
 })
-queries.invalidateQueries({ queryKey: ['newposts'] })
+queries.invalidateQueries({ queryKey: queryKeys.posts })
 
 
 
     },
     onError:(err)=>{
-      if(axios.isAxiosError(err))console.error(err.response?.data)
+      if(isAxiosError(err))console.error(err.response?.data)
     }
   })
  function handleCreatePost(){
@@ -55,13 +57,7 @@ queries.invalidateQueries({ queryKey: ['newposts'] })
   const formData=new FormData()
 if(content.trim())formData.append('body',content)
 if (picture) formData.append('image', picture)
-return axios.post('https://route-posts.routemisr.com/posts',formData,
-  {
-    headers:{
-      Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-    }
-  }
-)
+return createPost(formData)
 
 
 

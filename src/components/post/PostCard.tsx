@@ -6,8 +6,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import PostFooter from "./PostFooter";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost, updatePost as updatePostApi, toggleBookmark } from "../../api/posts.api";
+import { queryKeys } from "../../api/queryKeys";
 
 import { Link } from 'react-router'
 
@@ -27,18 +28,14 @@ export default function PostCard({element}: PostCardProps) {
     const queries=useQueryClient()
    function handleDeletPost(id:string){
     
-  return axios.delete(`https://route-posts.routemisr.com/posts/${id}`,{
-   headers:{
-            Authorization:`Bearer ${localStorage.getItem('usertoken')}`
-        }
-})
+  return deletePost(id)
 
     }
 const{mutate:handleDelete } = useMutation({
 
 mutationFn: handleDeletPost,
 onSuccess:()=>{
-   queries.invalidateQueries({ queryKey: ['newposts'] })
+   queries.invalidateQueries({ queryKey: queryKeys.posts })
 }
 
 })
@@ -50,30 +47,26 @@ const [edittext,setedittext]=useState('')
 function updatePost(){
   const formdata= new FormData()
   formdata.append('body',edittext)
-  return axios.put(`https://route-posts.routemisr.com/posts/${_id}`,formdata,{
-     headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}`}
-  })
+  return updatePostApi(_id, formdata)
 
 }
  const { mutate: handleUpdate, isPending: isUpdating } =useMutation({
   mutationFn:updatePost,
   onSuccess:()=>{
     setIsEditing(false)
-    queries.invalidateQueries({queryKey:['newposts']})
-       queries.invalidateQueries({ queryKey: ['postdetails'] })
+    queries.invalidateQueries({queryKey:queryKeys.posts})
+       queries.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
   }
  })
  const {mutate} =useMutation({
   mutationFn:savepost,
   onSuccess:()=>{
-    queries.invalidateQueries({queryKey:['newposts']})
-    queries.invalidateQueries({ queryKey: ['bookmarks'] })
+    queries.invalidateQueries({queryKey:queryKeys.posts})
+    queries.invalidateQueries({ queryKey: queryKeys.bookmarks })
   }
  })
  function savepost(){
-return axios.put(`https://route-posts.routemisr.com/posts/${_id}/bookmark`,'',{
-   headers: { Authorization: `Bearer ${localStorage.getItem('usertoken')}`}
-})
+return toggleBookmark(_id)
  }
 return(<> 
     <Card
