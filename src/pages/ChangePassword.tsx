@@ -2,10 +2,7 @@ import * as zod from 'zod'
 import {useState} from 'react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import Swal from 'sweetalert2';
-import { isAxiosError } from '../api/client';
-import { changePassword } from '../api/auth.api';
+import { useChangePassword } from '../hooks/useChangePassword';
 
 export default function ChangePassword() {
     const [successMsg, setSuccessMsg] = useState('')
@@ -27,22 +24,12 @@ const  { handleSubmit, register,reset ,formState: { errors } } = useForm<passwor
   },
   resolver:zodResolver(validschema)
 })
-const {mutate, isPending}=useMutation({
-    mutationFn:changePasswordApi,
-    onSuccess:(res)=>{
-          localStorage.setItem('usertoken', res.data.data.token)
+const { mutate, isPending } = useChangePassword({
+  onSuccess: () => {
     reset()
- setSuccessMsg('Password changed successfully.')
-    },
-    onError:(err)=>{
-          if (isAxiosError(err)) {
-      Swal.fire({ icon: 'error', title: 'Error!', text: err.response?.data.message })
-    }
-    }
+    setSuccessMsg('Password changed successfully.')
+  },
 })
-function changePasswordApi(values: passwordForm) {
-return changePassword({password:values.password,newPassword:values.newPassword})
-}
 function handleApi(values: passwordForm) {
   mutate(values)
 }

@@ -1,64 +1,31 @@
 import { useContext,useState } from 'react'
 import { Avatar } from 'flowbite-react'
-import type { Post, User1 } from '../types/posts'
+import type { User1 } from '../types/posts'
 import { AuthContext } from '../context/AuthContext'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import PostCard from '../components/post/PostCard'
-import { getUserPosts, uploadPhoto, uploadCover, getBookmarks } from '../api/users.api'
-import { queryKeys } from '../api/queryKeys'
+import { useUserPosts } from '../hooks/useUserPosts'
+import { useBookmarks } from '../hooks/useBookmarks'
+import { useProfileUpload } from '../hooks/useProfileUpload'
 
 
 export default function Profile() {
 
 
   const { userData ,setUserData}: { userData: User1 | null ;setUserData: (user: User1) => void } = useContext(AuthContext)
-    const {data}=useQuery({
-    queryKey:queryKeys.userPosts(userData?._id),
-    queryFn:getmyposts,
-    enabled:!!userData,
+  const { posts: myposts } = useUserPosts(userData?._id, { enabled: !!userData })
+  const [activeTab, setActiveTab] = useState('posts')
+  const [showPhoto, setShowPhoto] = useState(false)
+  const { uploadPhoto, uploadCover } = useProfileUpload({
+    onPhotoSuccess: (photo) => {
+      if (userData) setUserData({ ...userData, photo })
+    },
+    onCoverSuccess: (cover) => {
+      if (userData) setUserData({ ...userData, cover })
+    },
   })
-    function getmyposts(){
-    return getUserPosts(userData?._id)
-
-  }
-  const myposts: Post[] = data?.data.data.posts ?? []
- const queries=useQueryClient() 
-const [activeTab, setActiveTab] = useState('posts')
-const [showPhoto, setShowPhoto] = useState(false)
-function updatePhoto(photo:File){
-  const formdata= new FormData()
-formdata.append('photo',photo)
-  return uploadPhoto(formdata)
-}
-const{mutate}=useMutation({
-  mutationFn:updatePhoto,
-onSuccess: (res) => {
-  if (userData)  setUserData({ ...userData, photo: res.data.data.photo })
-    queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
-},
-})
-function updatecover(cover:File){
-  const formdata= new FormData()
-formdata.append('cover',cover)
-  return uploadCover(formdata)
-}
-const{mutate:handlecover}=useMutation({
-  mutationFn:updatecover,
-onSuccess: (res) => {
-  if (userData)  setUserData({ ...userData, cover: res.data.data.cover })
-    queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
-},
-})
-
-const {data: bookmarksData}=useQuery({
-  queryKey:queryKeys.bookmarks,
-  queryFn:getbookmarks,
-  enabled:!! userData
-})
-function getbookmarks(){
-  return getBookmarks()
-}
-const bookmarks:Post[]= bookmarksData?.data.data.bookmarks ?? []
+  const mutate = (file: File) => uploadPhoto.mutate(file)
+  const handlecover = (file: File) => uploadCover.mutate(file)
+  const { bookmarks } = useBookmarks({ enabled: !!userData })
   if (!userData) return null
 
   const stats = [

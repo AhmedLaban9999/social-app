@@ -8,12 +8,13 @@ import Swal from 'sweetalert2'
 import { useNavigate, NavLink } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { signin } from "../api/auth.api";
+import { useAuthActions } from "../hooks/useAuthActions";
 
 
 
 export default function Login() {
   let { setUserData } = useContext(AuthContext)
+  const { signin } = useAuthActions()
 let nav = useNavigate()
 const validschema =zod.object({
   

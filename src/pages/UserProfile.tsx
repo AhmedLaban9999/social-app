@@ -1,46 +1,19 @@
 import { useParams } from 'react-router'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Post, User1 } from '../types/posts'
 import { Avatar } from 'flowbite-react'
 import PostCard from '../components/post/PostCard'
-import { getUserProfile as getUserProfileApi, followUser, getUserPosts as getUserPostsApi } from '../api/users.api'
-import { queryKeys } from '../api/queryKeys'
+import { useUserProfile } from '../hooks/useUserProfile'
+import { useFollowUser } from '../hooks/useFollowUser'
+import { useUserPosts } from '../hooks/useUserPosts'
 
 export default function UserProfile() {
     
   const { id } = useParams()
-function getUserProfile() {
-  return getUserProfileApi(id)
-}
-const { data } = useQuery({
-  queryKey: queryKeys.profile(id),
-  queryFn: getUserProfile,
-})
+  const { user, isFollowing } = useUserProfile(id)
+  const followMutation = useFollowUser(id)
+  const handleFollow = () => followMutation.mutate(id)
+  const isPending = followMutation.isPending
+  const { posts } = useUserPosts(id)
 
-const user: User1 | undefined = data?.data.data.user
-const isFollowing: boolean = data?.data.data.isFollowing ?? false
-function toggleFollow() {
-  return followUser(id)
-}
-const queries = useQueryClient()
-
-const { mutate: handleFollow, isPending } = useMutation({
-  mutationFn: toggleFollow,
-  onSuccess: () => {
-    queries.invalidateQueries({ queryKey: queryKeys.profile(id) })
-    queries.invalidateQueries({ queryKey: queryKeys.suggestionsAll })
-  },
-})
-function getUserPosts() {
-  return getUserPostsApi(id)
-}
-
-const { data: postsData } = useQuery({
-  queryKey: queryKeys.userPosts(id),
-  queryFn: getUserPosts,
-})
-
-const posts: Post[] = postsData?.data.data.posts ?? []
 if (!user) return null
 
  return (

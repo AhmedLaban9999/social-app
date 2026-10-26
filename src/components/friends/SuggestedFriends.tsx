@@ -1,37 +1,15 @@
 import { useState } from "react";
 import { Avatar } from "flowbite-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { getSuggestions, followUser as followUserApi } from "../../api/users.api";
-import { queryKeys } from "../../api/queryKeys";
-
-
-import type { Friend } from '../../types/Friends'
+import { useSuggestions } from "../../hooks/useSuggestions";
+import { useFollowUser } from "../../hooks/useFollowUser";
 
 
 
 export default function SuggestedFriends() {
-    const queries=useQueryClient()
      const [search, setSearch] = useState("");
-    const {data}=useQuery({
-    queryKey:queryKeys.suggestions(search),
-    queryFn:followSugestion
-})
-function followSugestion(){
-    return getSuggestions(search, 5)
-}
-function followUser(userId: string) {
-  return followUserApi(userId)
-}
- 
-const {mutate}=useMutation({
-    mutationFn:followUser,
-    onSuccess:()=>{
-        queries.invalidateQueries({queryKey:queryKeys.suggestionsAll})
-     
-    }
-})
-   const friends: Friend[] = data?.data.data.suggestions ?? []
+    const { friends } = useSuggestions(search, 5)
+    const { mutate } = useFollowUser()
 
 
  

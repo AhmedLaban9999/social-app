@@ -4,12 +4,11 @@ import {useContext ,useState} from 'react'
 import { AuthContext } from '../context/AuthContext'
 import type { Post } from '../types/posts'
 import CreatePost from '../components/post/CreatePost'
-import { useQuery } from '@tanstack/react-query'
 import { ThreeDots } from 'react-loader-spinner'
 import SuggestedFriends from '../components/friends/SuggestedFriends';
-import { getUserPosts, getBookmarks } from '../api/users.api'
-import { queryKeys } from '../api/queryKeys'
 import { usePosts } from '../hooks/usePosts'
+import { useUserPosts } from '../hooks/useUserPosts'
+import { useBookmarks } from '../hooks/useBookmarks'
 
 const tabs = [
   { key: 'feed', label: 'Feed', icon: 'fa-regular fa-newspaper' },
@@ -23,17 +22,9 @@ export default function Feed() {
   const { userData } = useContext(AuthContext)
 
   const { isError, isLoading, data, error } = usePosts()
+  const { posts: myposts } = useUserPosts(userData?._id, { enabled: !!userData })
+  const { bookmarks: savedPosts } = useBookmarks({ enabled: !!userData })
 
-  const { data: myPostsData } = useQuery({
-    queryKey: queryKeys.userPosts(userData?._id),
-    queryFn: () => getUserPosts(userData?._id),
-    enabled: !!userData,
-  })
-const { data: savedData } = useQuery({
-  queryKey: queryKeys.bookmarks,
-  queryFn: () => getBookmarks(),
-  enabled: !!userData,
-})
   if (isLoading) {
     return (
       <ThreeDots height="80" width="80" color="#2563eb" ariaLabel="three-dots-loading" visible={true} />
@@ -45,8 +36,6 @@ const { data: savedData } = useQuery({
   }
 
   const postslist: Post[] = data?.data.data.posts
-  const myposts: Post[] = myPostsData?.data.data.posts ?? []
-const savedPosts: Post[] = savedData?.data.data.bookmarks ?? []
 let shownPosts = postslist
 if (activeTab === 'myposts') shownPosts = myposts
 if (activeTab === 'saved') shownPosts = savedPosts

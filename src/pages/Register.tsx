@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from 'sweetalert2'
-import { signup } from "../api/auth.api";
+import { useAuthActions } from "../hooks/useAuthActions";
 
 
 
 
 export default function Register() {
+  const { signup } = useAuthActions()
 let nav = useNavigate()
 const validschema =zod.object({
     name:zod.string().min(2,'min char is 2').max(20,'max char  is 20'),

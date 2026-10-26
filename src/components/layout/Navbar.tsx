@@ -8,7 +8,7 @@ import {
   
   
 } from "flowbite-react";
-import { useContext,useEffect,useState } from "react";
+import { useContext } from "react";
 import { useLocation } from "react-router";
 import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthContext";
@@ -16,36 +16,22 @@ import type { User1 } from "../../types/posts";
 
 
 import imglogo from '../../assets/route.png'
-import { useQuery } from "@tanstack/react-query";
-import { getUnreadCount } from "../../api/notifications.api";
-import { queryKeys } from "../../api/queryKeys";
+import { useDarkMode } from "../../hooks/useDarkMode";
+import { useUnreadCount } from "../../hooks/useUnreadCount";
 
 export default function Navbar() {
 let { userData, setUserData, isLoading }: { userData: User1 | null; setUserData: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
   const location = useLocation();
   const hideNav = ['/Login', '/'].includes(location.pathname);
   const showNav = !hideNav && !!userData;
-const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark')
-
-useEffect(() => {
-  document.documentElement.classList.toggle('dark', isDark)
-  localStorage.setItem('theme', isDark ? 'dark' : 'light')
-}, [isDark])
+const { isDark, toggle } = useDarkMode()
   let navg =useNavigate()
 function Logout(){
   localStorage.removeItem('usertoken')
 setUserData(null)
 navg('/Login')
 }
-const { data: unreadData } = useQuery({
-  queryKey: queryKeys.unreadCount,
-  queryFn: getUnreadNotification,
-  enabled: !!userData,
-})
-const unreadcount: number = unreadData?.data.data.unreadCount ?? 0
-function getUnreadNotification() {
-  return getUnreadCount()
-}
+const { unreadCount: unreadcount } = useUnreadCount({ enabled: !!userData })
   return (<>
 <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
   <div className="w-full px-3 md:px-[5%]">
@@ -99,7 +85,7 @@ function getUnreadNotification() {
       <div className="flex items-center gap-2">
         
         <button
-          onClick={() => setIsDark(!isDark)}
+          onClick={toggle}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-[#F8FAFC] text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-yellow-400 dark:hover:bg-gray-700"
         >
           <i className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>

@@ -1,27 +1,13 @@
 import { Link } from 'react-router'
 import { Avatar } from 'flowbite-react'
-import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react';
-import type {Friend}  from '../types/Friends'
-import { getSuggestions } from '../api/users.api'
-import { queryKeys } from '../api/queryKeys'
+import { useAllSuggestions } from '../hooks/useAllSuggestions'
 
 
 export default function AllSuggestions() {
   const [search, setSearch] = useState('')
 
-  const {data, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
-
-    queryKey:queryKeys.allSuggestions(search),
-   queryFn: ({ pageParam }) => getSuggestedFriends(pageParam),
-   initialPageParam: 1,
-   getNextPageParam: (lastPage) => lastPage.data.meta.pagination.nextPage,
-  })
-  function getSuggestedFriends(page:number){
-   return getSuggestions(search, 20, page)
-  
-  }
-    const friends: Friend[] = data?.pages.flatMap((page) => page.data.data.suggestions) ?? []
+  const { friends, fetchNextPage, hasNextPage, isFetchingNextPage } = useAllSuggestions(search, 20)
 
    return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6">

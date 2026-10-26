@@ -1,17 +1,10 @@
 import { Avatar } from 'flowbite-react'
-import type { Notification } from '../types/Notifications'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
 import { Link } from 'react-router'
-import {
-  getNotifications,
-  getUnreadCount,
-  markNotificationRead,
-  markAllNotificationsRead,
-} from '../api/notifications.api'
-import { queryKeys } from '../api/queryKeys'
+import { useNotifications } from '../hooks/useNotifications'
+import { useUnreadCount } from '../hooks/useUnreadCount'
 
 dayjs.extend(relativeTime)
 
@@ -24,48 +17,15 @@ const typeInfo: Record<string, { text: string; icon: string; color: string }> = 
 
 export default function Notifications() {
   const [fillter, setfillter] = useState('all')
-  const queries = useQueryClient()
 
-  // الإشعارات
-  const { data } = useQuery({
-    queryKey: queryKeys.notifications,
-    queryFn: getNotification,
-  })
-  function getNotification() {
-    return getNotifications()
-  }
-  const notifications: Notification[] = data?.data.data.notifications ?? []
+  const { notifications, markRead, markAllRead } = useNotifications()
+  const { unreadCount: unreadcount } = useUnreadCount()
 
   const shownNotifications =
-  fillter === 'unread' ? notifications.filter((n) => !n.isRead) : notifications
-  const { data: unreadData } = useQuery({
-    queryKey: queryKeys.unreadCount,
-    queryFn: getUnreadNotification,
-  })
-  function getUnreadNotification() {
-    return getUnreadCount()
-  }
-  const unreadcount: number = unreadData?.data.data.unreadCount ?? 0
+    fillter === 'unread' ? notifications.filter((n) => !n.isRead) : notifications
 
-  // Mark as read
-  function markAsRead(id: string) {
-    return markNotificationRead(id)
-  }
-  const { mutate: handleisread } = useMutation({
-    mutationFn: markAsRead,
-    onSuccess: () => {
-      queries.invalidateQueries({ queryKey: queryKeys.notifications })
-    },
-  })
-  function markAllAsRead() {
-  return markAllNotificationsRead()
-}
-const { mutate: handleReadAll } = useMutation({
-  mutationFn: markAllAsRead,
-  onSuccess: () => {
-    queries.invalidateQueries({ queryKey: queryKeys.notifications })
-  },
-})
+  const handleisread = (id: string) => markRead.mutate(id)
+  const handleReadAll = () => markAllRead.mutate()
 
   return (
     <div className="mx-auto w-full max-w-6xl px-2 py-6 sm:px-4">
