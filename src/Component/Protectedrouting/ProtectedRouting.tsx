@@ -12,7 +12,7 @@ interface Props {
 // Fix #3: Wait for auth state to hydrate before deciding to redirect.
 // Without this check there is a flash-to-login on every hard refresh.
 export default function ProtectedRouting({ children }: Props) {
-  const { isLoading } = useContext(AuthContext)
+  const { isLoading, userData } = useContext(AuthContext)
 
   if (isLoading) {
     return (
@@ -22,9 +22,10 @@ export default function ProtectedRouting({ children }: Props) {
     )
   }
 
-  if (localStorage.getItem('usertoken')) {
-    return children
+  const token = localStorage.getItem('usertoken')
+  if (!token || !userData) {
+    return <Navigate to="/Login" replace />
   }
 
-  return <Navigate to='/Login' />
+  return <>{children}</>
 }
