@@ -1,9 +1,9 @@
 import { useParams } from 'react-router'
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { Post, User1 } from '../interfaces/posts'
-import { Avatar } from 'flowbite-react/components/Avatar'
-import PostCard from './PostCard'
+import type { Post, User1 } from '../types/posts'
+import { Avatar } from 'flowbite-react'
+import PostCard from '../components/post/PostCard'
 
 export default function UserProfile() {
     

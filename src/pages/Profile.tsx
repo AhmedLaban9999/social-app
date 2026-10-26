@@ -1,16 +1,16 @@
 import { useContext,useState } from 'react'
 import { Avatar } from 'flowbite-react'
-import type { Post, User1 } from '../interfaces/posts'
-import { AuthContext } from '../Context/AuthContext'
+import type { Post, User1 } from '../types/posts'
+import { AuthContext } from '../context/AuthContext'
 import axios from 'axios'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import PostCard from '../Component/PostCard'
+import PostCard from '../components/post/PostCard'
 
 
 export default function Profile() {
 
 
-  const { userData ,setuser}: { userData: User1 | null ;setuser: (user: User1) => void } = useContext(AuthContext)
+  const { userData ,setUserData}: { userData: User1 | null ;setUserData: (user: User1) => void } = useContext(AuthContext)
     const {data}=useQuery({
     queryKey:['userposts',userData?._id],
     queryFn:getmyposts,
@@ -24,7 +24,7 @@ export default function Profile() {
   }
   const myposts: Post[] = data?.data.data.posts ?? []
  const queries=useQueryClient() 
-const[isactive,setactivetab]=useState('posts')
+const [activeTab, setActiveTab] = useState('posts')
 const [showPhoto, setShowPhoto] = useState(false)
 function updatePhoto(photo:File){
   const formdata= new FormData()
@@ -36,7 +36,7 @@ formdata.append('photo',photo)
 const{mutate}=useMutation({
   mutationFn:updatePhoto,
 onSuccess: (res) => {
-  if (userData)  setuser({ ...userData, photo: res.data.data.photo })
+  if (userData)  setUserData({ ...userData, photo: res.data.data.photo })
     queries.invalidateQueries({ queryKey: ['userposts'] })
 },
 })
@@ -50,7 +50,7 @@ formdata.append('cover',cover)
 const{mutate:handlecover}=useMutation({
   mutationFn:updatecover,
 onSuccess: (res) => {
-  if (userData)  setuser({ ...userData, cover: res.data.data.cover })
+  if (userData)  setUserData({ ...userData, cover: res.data.data.cover })
     queries.invalidateQueries({ queryKey: ['userposts'] })
 },
 })
@@ -193,22 +193,22 @@ const bookmarks:Post[]= bookmarksData?.data.data.bookmarks ?? []
 
 <div className="mt-6 flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
   <div className="flex gap-1 rounded-2xl bg-slate-100 p-1 dark:bg-gray-900">
-    <button onClick={() => setactivetab('posts')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${isactive == 'posts' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
+    <button onClick={() => setActiveTab('posts')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${activeTab == 'posts' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
       <i className="fa-regular fa-file-lines"></i> My Posts
     </button>
-    <button onClick={() => setactivetab('saved')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${isactive == 'saved' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
+    <button onClick={() => setActiveTab('saved')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${activeTab == 'saved' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
       <i className="fa-regular fa-bookmark"></i> Saved
     </button>
   </div>
 
-  <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-bold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">{isactive === 'posts' ? myposts.length : bookmarks.length}</span>
+  <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-bold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">{activeTab === 'posts' ? myposts.length : bookmarks.length}</span>
 </div>
 
 <div className="mt-6 flex flex-col gap-6">
-  {isactive === 'posts' && myposts.map((post) => (
+  {activeTab === 'posts' && myposts.map((post) => (
     <PostCard key={post._id} element={post} />
   ))}
-  {isactive === 'saved' && bookmarks.map((post) => (
+  {activeTab === 'saved' && bookmarks.map((post) => (
     <PostCard key={post._id} element={post} />
   ))}
 </div>

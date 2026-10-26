@@ -4,23 +4,23 @@ import {
   Dropdown,
   DropdownDivider,
   DropdownItem,
-  Navbar,
+  Navbar as FlowNavbar,
   NavbarBrand,
   
   
 } from "flowbite-react";
 import { useContext,useEffect,useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
-import { AuthContext } from "../Context/AuthContext";
-import type { User1 } from "../interfaces/posts";
+import { AuthContext } from "../../context/AuthContext";
+import type { User1 } from "../../types/posts";
 
 
-import imglogo from '../assets/route.png'
+import imglogo from '../../assets/route.png'
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-export default function NavbarCom() {
-let { userData, setuser, isLoading }: { userData: User1 | null; setuser: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
+export default function Navbar() {
+let { userData, setUserData, isLoading }: { userData: User1 | null; setUserData: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
 const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark')
 
 useEffect(() => {
@@ -30,7 +30,7 @@ useEffect(() => {
   let navg =useNavigate()
 function Logout(){
   localStorage.removeItem('usertoken')
-setuser(null)
+setUserData(null)
 navg('/Login')
 }
 const { data: unreadData } = useQuery({
@@ -47,7 +47,7 @@ function getUnreadNotification() {
   return (<>
 <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
   <div className="w-full px-3 md:px-[5%]">
-  <Navbar fluid className="bg-transparent px-0 dark:bg-transparent">
+  <FlowNavbar fluid className="bg-transparent px-0 dark:bg-transparent">
 
 <div className="flex items-center justify-between w-full gap-4">
       <NavbarBrand as={Link} to="/Feed">
@@ -131,7 +131,7 @@ function getUnreadNotification() {
 </>}
       </div>
 
-    </div></Navbar>
+    </div></FlowNavbar>
     </div>
   </div>
  </> )

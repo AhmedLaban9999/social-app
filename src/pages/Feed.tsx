@@ -1,13 +1,13 @@
 
 import axios from 'axios'
-import PostCard from '../Component/PostCard'
+import PostCard from '../components/post/PostCard'
 import {useContext ,useState} from 'react'
-import { AuthContext } from '../Context/AuthContext'
-import type { Post } from '../interfaces/posts'
-import CreatePost from '../Component/CreatePost'
+import { AuthContext } from '../context/AuthContext'
+import type { Post } from '../types/posts'
+import CreatePost from '../components/post/CreatePost'
 import { useQuery } from '@tanstack/react-query'
 import { ThreeDots } from 'react-loader-spinner'
-import SuggestedFriends from './../Component/SuggestedFriends';
+import SuggestedFriends from '../components/friends/SuggestedFriends';
 
 const tabs = [
   { key: 'feed', label: 'Feed', icon: 'fa-regular fa-newspaper' },

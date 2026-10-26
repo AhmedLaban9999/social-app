@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link } from "react-router";
 
 
-import type {Friend} from '../interfaces/Friends'
+import type { Friend } from '../../types/Friends'
 
 
 

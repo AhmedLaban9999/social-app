@@ -8,12 +8,12 @@ import axios from "axios";
 import Swal from 'sweetalert2'
 import { useNavigate, NavLink } from "react-router";
 import { useContext } from "react";
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 
 
 export default function Login() {
-  let {setuser}= useContext(AuthContext)
+  let { setUserData } = useContext(AuthContext)
 let nav = useNavigate()
 const validschema =zod.object({
   
@@ -47,7 +47,7 @@ Swal.fire({
   confirmButtonText:'cool'
 
 })
-setuser(data?.data?.user)
+setUserData(data?.data?.user)
 localStorage.setItem('usertoken',data.data.token)
 setTimeout(()=>{
     nav('/Profile')

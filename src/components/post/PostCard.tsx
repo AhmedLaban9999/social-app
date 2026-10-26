@@ -1,11 +1,11 @@
 
-import type { Post } from "../interfaces/posts";
+import type { Post } from "../../types/posts";
 import { Avatar, Card, Dropdown, DropdownItem,Textarea,Button } from "flowbite-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import PostFooter from "./PostFooter";
 import { useContext, useState } from "react";
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -43,7 +43,7 @@ onSuccess:()=>{
 
 })
 
-const[isedit,setedit]=useState(false);
+const [isEditing, setIsEditing] = useState(false);
 const [edittext,setedittext]=useState('')
 
 
@@ -58,7 +58,7 @@ function updatePost(){
  const { mutate: handleUpdate, isPending: isUpdating } =useMutation({
   mutationFn:updatePost,
   onSuccess:()=>{
-    setedit(false)
+    setIsEditing(false)
     queries.invalidateQueries({queryKey:['newposts']})
        queries.invalidateQueries({ queryKey: ['postdetails'] })
   }
@@ -111,14 +111,14 @@ return(<>
   <i className={`${bookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark me-3 w-4`}></i>
   {bookmarked ? 'Unsave post' : 'Save post'}
 </DropdownItem>
-          {userId == userData?._id && <><DropdownItem  onClick={() => { setedit(true); setedittext(body ?? '') }} >Edit</DropdownItem>
+          {userId == userData?._id && <><DropdownItem  onClick={() => { setIsEditing(true); setedittext(body ?? '') }} >Edit</DropdownItem>
            <DropdownItem onClick={()=>handleDelete(_id)}>Delete</DropdownItem></>  }
           
   
         </Dropdown>
       </div>
 
-  {isedit ? (
+  {isEditing ? (
   <div className="px-4 pb-3">
     <Textarea
       rows={4}
@@ -127,7 +127,7 @@ return(<>
       className="rounded-xl"
     />
     <div className="mt-3 flex justify-end gap-2">
-      <Button color="light" pill size="sm" onClick={() => setedit(false)}>
+      <Button color="light" pill size="sm" onClick={() => setIsEditing(false)}>
         Cancel
       </Button>
       <Button pill size="sm" onClick={() => handleUpdate()} disabled={isUpdating}>

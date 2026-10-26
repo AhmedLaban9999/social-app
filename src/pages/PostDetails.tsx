@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Link, useParams } from 'react-router'
-import PostCard from '../Component/PostCard'
-import type { Post } from '../interfaces/posts'
+import PostCard from '../components/post/PostCard'
+import type { Post } from '../types/posts'
 import { useQuery } from '@tanstack/react-query'
 import {Bars} from 'react-loader-spinner'
 export default function PostsDetails() {

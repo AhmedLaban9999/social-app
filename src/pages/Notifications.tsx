@@ -1,5 +1,5 @@
 import { Avatar } from 'flowbite-react'
-import type { Notification } from '../interfaces/Notifications'
+import type { Notification } from '../types/Notifications'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import dayjs from 'dayjs'

@@ -1,10 +1,10 @@
 import  { createContext, useEffect, useState } from 'react'
-import type { User1 } from '../interfaces/posts'
+import type { User1 } from '../types/posts'
 import axios from 'axios'
 export const AuthContext =createContext<any>(null)
 
 export default function AuthContextProvider({children}:any) {
-    const [userData,setuser]= useState<User1|null>(null)
+    const [userData,setUserData]= useState<User1|null>(null)
     const [isLoading, setIsLoading] = useState(!!localStorage.getItem('usertoken'))
     async function getprofile(token: string|null) {
       try{ const {data} = await axios.get('https://route-posts.routemisr.com/users/profile-data',{
@@ -13,11 +13,11 @@ export default function AuthContextProvider({children}:any) {
                 Authorization: `Bearer ${token}`
             }
         })
-        setuser(data.data.user)
+        setUserData(data.data.user)
         
   }catch(err){
     localStorage.removeItem('usertoken')
-    setuser(null)
+    setUserData(null)
     console.error(err)
 } finally {
   setIsLoading(false)
@@ -32,7 +32,7 @@ useEffect(()=>{
   }
 },[])
   return (
-<AuthContext.Provider value={{userData,setuser,isLoading}}>
+<AuthContext.Provider value={{userData,setUserData,isLoading}}>
 {children}
 </AuthContext.Provider>
   )

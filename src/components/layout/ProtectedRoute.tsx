@@ -2,7 +2,7 @@
 import { Navigate } from 'react-router'
 import type { ReactNode } from 'react'
 import { useContext } from 'react'
-import { AuthContext } from '../../Context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import { ThreeDots } from 'react-loader-spinner'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 // Fix #3: Wait for auth state to hydrate before deciding to redirect.
 // Without this check there is a flash-to-login on every hard refresh.
-export default function ProtectedRouting({ children }: Props) {
+export default function ProtectedRoute({ children }: Props) {
   const { isLoading, userData } = useContext(AuthContext)
 
   if (isLoading) {

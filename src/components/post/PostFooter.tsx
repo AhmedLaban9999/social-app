@@ -1,13 +1,14 @@
 import axios from "axios";
 import { Button,Avatar } from "flowbite-react";
 import { useState ,useContext} from "react";
-import type { CommentItem } from "../interfaces/comment";
-import CommentCreator from "./CommentCreator";
-import { AuthContext } from "../Context/AuthContext";
+import type { CommentItem } from "../../types/comment";
+import type { Post } from "../../types/posts";
+import CommentCreator from "../comment/CommentCreator";
+import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import CommentCard from "./Commentcard";
+import CommentCard from "../comment/CommentCard";
 
 
 

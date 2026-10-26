@@ -3,7 +3,7 @@ import { Avatar } from 'flowbite-react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react';
 import axios from 'axios';
-import type {Friend}  from '../interfaces/Friends'
+import type {Friend}  from '../types/Friends'
 
 
 export default function AllSuggestions() {

@@ -1,12 +1,12 @@
 import { Avatar, Dropdown, DropdownItem } from "flowbite-react";
-import type { CommentItem } from "../interfaces/comment";
+import type { CommentItem } from "../../types/comment";
 import dayjs from "dayjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 
-import { AuthContext } from "../Context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 
 interface CommentCardProps {
@@ -15,7 +15,7 @@ interface CommentCardProps {
    refetch: () => void;
 }
 export default function CommentCard({ comment, postId, refetch }: CommentCardProps) {
-  const[isedit,setedit]=useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [edittext,setedittext]=useState('')
   const inputelement =useRef<HTMLInputElement>(null)
     const queries = useQueryClient();
@@ -86,7 +86,7 @@ function deletecomment(){
 const {mutate:handleupdatecomment}=useMutation({
   mutationFn:updatecomment,
   onSuccess:()=>{
-    setedit(false)
+    setIsEditing(false)
     refetch()
   queries.invalidateQueries({ queryKey: ['newposts'] })
   }
@@ -109,7 +109,7 @@ const replies:CommentItem[]= data?.data.data.replies ?? []
           <p className="text-sm font-bold text-gray-900">{comment.commentCreator.name}</p>
           <p className="text-xs text-gray-500">@{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}</p>
          {comment.image && <img src={comment.image} alt="comment" className="mt-2 max-h-60 rounded-xl object-cover" />}
-         {isedit ? (
+         {isEditing ? (
   <div className="mt-2">
     <input
       value={edittext}
@@ -117,7 +117,7 @@ const replies:CommentItem[]= data?.data.data.replies ?? []
       className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-blue-500"
     />
     <div className="mt-2 flex justify-end gap-2">
-      <button onClick={() => setedit(false)} className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200">
+      <button onClick={() => setIsEditing(false)} className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200">
         Cancel
       </button>
       <button  onClick={() => handleupdatecomment()}  className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700">
@@ -142,7 +142,7 @@ const replies:CommentItem[]= data?.data.data.replies ?? []
   arrowIcon={false}
   label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600"></i>}
 >
-  <DropdownItem onClick={() => { setedit(true); setedittext(comment.content) }}>
+  <DropdownItem onClick={() => { setIsEditing(true); setedittext(comment.content) }}>
     <i className="fa-solid fa-pen me-3 w-4"></i> Edit
   </DropdownItem>
   <DropdownItem onClick={()=>handledeletecomment()} className="text-red-600 hover:bg-red-50">
