@@ -6,9 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import PostFooter from "./PostFooter";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePost, updatePost as updatePostApi, toggleBookmark } from "../../api/posts.api";
-import { queryKeys } from "../../api/queryKeys";
+import { usePostActions } from "../../hooks/usePostActions";
 
 import { Link } from 'react-router'
 
@@ -24,50 +22,16 @@ export default function PostCard({element}: PostCardProps) {
    const { userData } = useContext(AuthContext)
   const {sharedPost, _id, image, body, createdAt,bookmarked, user: { name, photo, _id: userId } } = element
 
-    
-    const queries=useQueryClient()
-   function handleDeletPost(id:string){
-    
-  return deletePost(id)
-
-    }
-const{mutate:handleDelete } = useMutation({
-
-mutationFn: handleDeletPost,
-onSuccess:()=>{
-   queries.invalidateQueries({ queryKey: queryKeys.posts })
-}
-
-})
+  const { deletePost, editPost, toggleBookmark } = usePostActions(_id)
+  const handleDelete = () => deletePost.mutate()
 
 const [isEditing, setIsEditing] = useState(false);
 const [edittext,setedittext]=useState('')
 
-
-function updatePost(){
-  const formdata= new FormData()
-  formdata.append('body',edittext)
-  return updatePostApi(_id, formdata)
-
-}
- const { mutate: handleUpdate, isPending: isUpdating } =useMutation({
-  mutationFn:updatePost,
-  onSuccess:()=>{
-    setIsEditing(false)
-    queries.invalidateQueries({queryKey:queryKeys.posts})
-       queries.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
-  }
- })
- const {mutate} =useMutation({
-  mutationFn:savepost,
-  onSuccess:()=>{
-    queries.invalidateQueries({queryKey:queryKeys.posts})
-    queries.invalidateQueries({ queryKey: queryKeys.bookmarks })
-  }
- })
- function savepost(){
-return toggleBookmark(_id)
- }
+  const handleUpdate = () =>
+    editPost.mutate(edittext, { onSuccess: () => setIsEditing(false) })
+  const isUpdating = editPost.isPending
+  const mutate = () => toggleBookmark.mutate()
 return(<> 
     <Card
       className=" w-full overflow-hidden"
@@ -105,7 +69,7 @@ return(<>
   {bookmarked ? 'Unsave post' : 'Save post'}
 </DropdownItem>
           {userId == userData?._id && <><DropdownItem  onClick={() => { setIsEditing(true); setedittext(body ?? '') }} >Edit</DropdownItem>
-           <DropdownItem onClick={()=>handleDelete(_id)}>Delete</DropdownItem></>  }
+           <DropdownItem onClick={()=>handleDelete()}>Delete</DropdownItem></>  }
           
   
         </Dropdown>

@@ -7,9 +7,9 @@ import CreatePost from '../components/post/CreatePost'
 import { useQuery } from '@tanstack/react-query'
 import { ThreeDots } from 'react-loader-spinner'
 import SuggestedFriends from '../components/friends/SuggestedFriends';
-import { getPosts as getPostsApi } from '../api/posts.api'
 import { getUserPosts, getBookmarks } from '../api/users.api'
 import { queryKeys } from '../api/queryKeys'
+import { usePosts } from '../hooks/usePosts'
 
 const tabs = [
   { key: 'feed', label: 'Feed', icon: 'fa-regular fa-newspaper' },
@@ -22,14 +22,7 @@ export default function Feed() {
   const [activeTab, setActiveTab] = useState('feed')
   const { userData } = useContext(AuthContext)
 
-  function getPosts() {
-    return getPostsApi()
-  }
-
-  const { isError, isLoading, data, error } = useQuery({
-    queryKey: queryKeys.posts,
-    queryFn: getPosts,
-  })
+  const { isError, isLoading, data, error } = usePosts()
 
   const { data: myPostsData } = useQuery({
     queryKey: queryKeys.userPosts(userData?._id),

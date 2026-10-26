@@ -1,19 +1,12 @@
 import { Avatar, Dropdown, DropdownItem } from "flowbite-react";
 import type { CommentItem } from "../../types/comment";
 import dayjs from "dayjs";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import { useContext, useEffect, useRef, useState } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
-import {
-  likeComment as likeCommentApi,
-  createReply as createReplyApi,
-  getReplies as getRepliesApi,
-  deleteComment as deleteCommentApi,
-  updateComment as updateCommentApi,
-} from "../../api/comments.api";
-import { queryKeys } from "../../api/queryKeys";
+import { useCommentActions } from "../../hooks/useCommentActions";
+import { useReplies } from "../../hooks/useReplies";
+import { useCreateReply } from "../../hooks/useCreateReply";
 
 
 interface CommentCardProps {
@@ -25,74 +18,53 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
   const [isEditing, setIsEditing] = useState(false)
   const [edittext,setedittext]=useState('')
   const inputelement =useRef<HTMLInputElement>(null)
-    const queries = useQueryClient();
     const [showreplies,setreplies]=useState(false)
     const [replytext,setreplytext]=useState('')
     const { userData } = useContext(AuthContext)
     useEffect(() => {
   if (showreplies) inputelement.current?.focus()
 }, [showreplies])
-    function likeComment(commentId: string) {
-  return likeCommentApi(postId, commentId)
-}
-const { mutate: handleLikeComment } = useMutation({
-  mutationFn: likeComment,
-  onSuccess: () => {
-refetchReplies()
-    queries.invalidateQueries({ queryKey: queryKeys.posts })
-  },
-})
 
-const {mutate:handlecreateReply}=useMutation({
-    mutationFn:createreply,
-    onSuccess: () => {
-  setreplytext('')
-  // Fix #1: refresh() was called here but was never defined — runtime crash.
-  // Invalidate the replies query instead to re-fetch from the server.
-  queries.invalidateQueries({ queryKey: queryKeys.replies(comment._id) })
-  refetchReplies()
-},
-})
+  const { editComment, deleteComment, likeComment } = useCommentActions(postId)
+  const { replies, refetch: refetchReplies } = useReplies(postId, comment._id, { enabled: showreplies })
+  const createReplyMutation = useCreateReply(postId, comment._id)
 
-function createreply(text:string){
-    const formdata= new FormData()
-    formdata.append('content',text)
-return createReplyApi(postId, comment._id, formdata)
-}
-const{data ,refetch: refetchReplies}=useQuery({
-    queryKey:queryKeys.replies(comment._id),
-    queryFn:getReplies,
-    enabled: showreplies,
-})
-function getReplies() {
-  return getRepliesApi(postId, comment._id)
-} 
-const {mutate:handledeletecomment}= useMutation({
-  mutationFn:deletecomment,
-  onSuccess:()=>{
-    refetch()
-  queries.invalidateQueries({ queryKey: queryKeys.posts })
-  queries.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
-queries.invalidateQueries({ queryKey: queryKeys.userPostsAll })
+  const handleLikeComment = (commentId: string) => {
+    likeComment.mutate(commentId, {
+      onSuccess: () => {
+        refetchReplies()
+      },
+    })
   }
-})
-function deletecomment(){
-  return deleteCommentApi(postId, comment._id)
-}
-const {mutate:handleupdatecomment}=useMutation({
-  mutationFn:updatecomment,
-  onSuccess:()=>{
-    setIsEditing(false)
-    refetch()
-  queries.invalidateQueries({ queryKey: queryKeys.posts })
+
+  const handlecreateReply = (text: string) => {
+    createReplyMutation.mutate(text, {
+      onSuccess: () => {
+        setreplytext('')
+        refetchReplies()
+      },
+    })
   }
-})
-function updatecomment(){
-  const formdata =new FormData()
-  formdata.append('content',edittext)
-  return updateCommentApi(postId, comment._id, formdata)
-}
-const replies:CommentItem[]= data?.data.data.replies ?? []
+
+  const handledeletecomment = () => {
+    deleteComment.mutate(comment._id, {
+      onSuccess: () => {
+        refetch()
+      },
+    })
+  }
+
+  const handleupdatecomment = () => {
+    editComment.mutate(
+      { commentId: comment._id, content: edittext },
+      {
+        onSuccess: () => {
+          setIsEditing(false)
+          refetch()
+        },
+      },
+    )
+  }
   return (
     <div className="flex items-start gap-3">
       <Avatar img={comment.commentCreator.photo} rounded size="sm" />

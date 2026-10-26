@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Avatar } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
-import { createComment } from "../../api/comments.api";
+import Swal from "sweetalert2";
+import { useCommentActions } from "../../hooks/useCommentActions";
+import { getApiErrorMessage } from "../../utils/getApiErrorMessage";
 
 interface CommentCreatorProps {
   name: string;
@@ -15,25 +17,32 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
   const [picture, setPicture] = useState<File | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
 
+  const { createComment } = useCommentActions(postId);
+
   function handleEmoji(emojiData: EmojiClickData) {
     setContent((prev) => prev + emojiData.emoji);
   }
  
 
- async function handleCreateComment() {
-    const formData =new FormData()
-    if(content.trim())formData.append('content',content)
-        if (picture) formData.append('image', picture)
- try{const {data}= await createComment(postId, formData)
-setContent('')
-setPicture(null)
-setShowEmoji(false)
-refetch()
-}catch(err: any){
-      console.error(err.response?.data?.message)
-}
-
-   
+  function handleCreateComment() {
+    const formData = new FormData()
+    if (content.trim()) formData.append('content', content)
+    if (picture) formData.append('image', picture)
+    createComment.mutate(formData, {
+      onSuccess: () => {
+        setContent('')
+        setPicture(null)
+        setShowEmoji(false)
+        refetch()
+      },
+      onError: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: getApiErrorMessage(err, 'Failed to create comment'),
+        })
+      },
+    })
   }
 
   return (
@@ -86,7 +95,7 @@ refetch()
 
             <button
               onClick={handleCreateComment}
-              disabled={!content.trim() && !picture}
+              disabled={createComment.isPending || (!content.trim() && !picture)}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300"
             >
               <i className="fa-regular fa-paper-plane"></i>

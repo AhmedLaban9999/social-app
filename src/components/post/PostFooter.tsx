@@ -1,16 +1,13 @@
 import { Button,Avatar } from "flowbite-react";
 import { useState ,useContext} from "react";
-import type { CommentItem } from "../../types/comment";
 import type { Post } from "../../types/posts";
 import CommentCreator from "../comment/CommentCreator";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import CommentCard from "../comment/CommentCard";
-import { toggleLike, sharePost as sharePostApi } from "../../api/posts.api";
-import { getPostComments } from "../../api/comments.api";
-import { queryKeys } from "../../api/queryKeys";
+import { usePostActions } from "../../hooks/usePostActions";
+import { useComments } from "../../hooks/useComments";
 
 
 
@@ -18,39 +15,33 @@ import { queryKeys } from "../../api/queryKeys";
 export default function PostFooter({postdetail}:{postdetail:Post}) {
     const { userData } = useContext(AuthContext);
     const {likesCount,commentsCount,sharesCount,topComment,_id,likes,user}=postdetail
-    const [commentlist,setcomment]=useState< CommentItem[] |null>(null)
+    const [showComments, setShowComments] = useState(false)
     const [showShare, setShowShare] = useState(false)
     const [shareText, setShareText] = useState('')
-const queries=useQueryClient()
 
+    const { toggleLike, sharePost } = usePostActions(_id)
+    const { comments: commentlist, refetch: refetchComments } = useComments(_id, { enabled: showComments })
 
-     function HandleLike() {
-    return toggleLike(_id)
-  }
-  const {mutate,isPending} = useMutation({
-    mutationFn:HandleLike,
-    onSuccess:()=>{
-      queries.invalidateQueries({queryKey:queryKeys.posts},
-        
-      )
+    const mutate = (_postId?: string) => toggleLike.mutate()
+    const isPending = toggleLike.isPending
+    const isSharing = sharePost.isPending
+
+    function getPostComment(_idParam?: string) {
+      if (!showComments) {
+        setShowComments(true)
+      } else {
+        refetchComments()
+      }
     }
 
-  })
-async function getPostComment(id) {
-    const {data} =await getPostComments(id)
-    setcomment(data.data.comments)
-}
-function sharePost() {
-  return sharePostApi(_id, shareText)
-}
-const { mutate: handleShare, isPending: isSharing } = useMutation({
-  mutationFn: sharePost,
-  onSuccess: () => {
-    setShareText('')
-    setShowShare(false)
-    queries.invalidateQueries({ queryKey: queryKeys.posts })
-  },
-})
+    const handleShare = () => {
+      sharePost.mutate(shareText, {
+        onSuccess: () => {
+          setShareText('')
+          setShowShare(false)
+        },
+      })
+    }
   return (
     <>
       

@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Avatar, Button, Card, Dropdown, DropdownItem, Textarea } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import Swal from "sweetalert2";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { isAxiosError } from "../../api/client";
-import { createPost } from "../../api/posts.api";
-import { queryKeys } from "../../api/queryKeys";
+import { useCreatePost } from "../../hooks/useCreatePost";
 
 
 interface CreatePostProps {
@@ -29,39 +26,26 @@ const [picture,setpicture]=useState<File | null>(null)
   function handleEmoji(emojiData: EmojiClickData) {
     setcontent((prev) => prev + emojiData.emoji);
   }
-  const queries = useQueryClient()
-  const {mutate} = useMutation({
-    mutationFn: handleCreatePost,
-    onSuccess:(res)=>{
-setcontent('')
-setpicture(null)
-setShowEmoji(false)
-Swal.fire({
-  title:'success!',
-  text:res.data.message,
-  icon:'success',
-  confirmButtonText:'cool',
-  timer:1000
-})
-queries.invalidateQueries({ queryKey: queryKeys.posts })
-
-
-
-    },
-    onError:(err)=>{
-      if(isAxiosError(err))console.error(err.response?.data)
-    }
-  })
- function handleCreatePost(){
-
-  const formData=new FormData()
-if(content.trim())formData.append('body',content)
-if (picture) formData.append('image', picture)
-return createPost(formData)
-
-
-
-}
+  const createPostMutation = useCreatePost()
+  function mutate() {
+    const formData = new FormData()
+    if (content.trim()) formData.append('body', content)
+    if (picture) formData.append('image', picture)
+    createPostMutation.mutate(formData, {
+      onSuccess: (res) => {
+        setcontent('')
+        setpicture(null)
+        setShowEmoji(false)
+        Swal.fire({
+          title: 'success!',
+          text: res.data.message,
+          icon: 'success',
+          confirmButtonText: 'cool',
+          timer: 1000,
+        })
+      },
+    })
+  }
  
 
   return (
