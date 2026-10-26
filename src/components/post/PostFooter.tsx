@@ -68,7 +68,7 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
 
       
       <div className="mx-2 sm:mx-4 flex gap-2 border-t border-gray-200 py-2 dark:border-gray-700">
-        <Button onClick={() => mutate(_id)} disabled={isPending} color="light" className={`flex-1 border-0 ${likes.includes(userData?._id) ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-white text-gray-600 dark:bg-transparent dark:text-gray-300'} hover:bg-blue-100 dark:hover:bg-gray-700`}>
+        <Button onClick={() => mutate(_id)} disabled={isPending} color="light" className={`flex-1 border-0 ${userData && likes.includes(userData._id) ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-white text-gray-600 dark:bg-transparent dark:text-gray-300'} hover:bg-blue-100 dark:hover:bg-gray-700`}>
           <i className="fa-regular fa-thumbs-up sm:me-2"></i> <span className="hidden sm:inline">Like</span>
         </Button>
         <Button color="light" className="flex-1 border-0 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700">

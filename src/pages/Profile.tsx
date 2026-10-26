@@ -1,6 +1,5 @@
 import { useContext,useState } from 'react'
 import { Avatar } from 'flowbite-react'
-import type { User1 } from '../types/posts'
 import { AuthContext } from '../context/AuthContext'
 import PostCard from '../components/post/PostCard'
 import { useUserPosts } from '../hooks/useUserPosts'
@@ -11,7 +10,7 @@ import { useProfileUpload } from '../hooks/useProfileUpload'
 export default function Profile() {
 
 
-  const { userData ,setUserData}: { userData: User1 | null ;setUserData: (user: User1) => void } = useContext(AuthContext)
+  const { userData, setUserData } = useContext(AuthContext)
   const { posts: myposts } = useUserPosts(userData?._id, { enabled: !!userData })
   const [activeTab, setActiveTab] = useState('posts')
   const [showPhoto, setShowPhoto] = useState(false)

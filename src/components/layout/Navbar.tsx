@@ -12,7 +12,6 @@ import { useContext } from "react";
 import { useLocation } from "react-router";
 import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthContext";
-import type { User1 } from "../../types/posts";
 
 
 import imglogo from '../../assets/route.png'
@@ -20,7 +19,7 @@ import { useDarkMode } from "../../hooks/useDarkMode";
 import { useUnreadCount } from "../../hooks/useUnreadCount";
 
 export default function Navbar() {
-let { userData, setUserData, isLoading }: { userData: User1 | null; setUserData: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
+let { userData, setUserData, isLoading } = useContext(AuthContext)
   const location = useLocation();
   const hideNav = ['/Login', '/'].includes(location.pathname);
   const showNav = !hideNav && !!userData;
