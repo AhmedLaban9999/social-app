@@ -50,7 +50,7 @@ Swal.fire({
 setUserData(data?.data?.user)
 localStorage.setItem('usertoken',data.data.token)
 setTimeout(()=>{
-    nav('/Profile')
+    nav('/Feed', { replace: true })
 },2000);
 }).catch(({response :{data}})=>{
     Swal.fire({

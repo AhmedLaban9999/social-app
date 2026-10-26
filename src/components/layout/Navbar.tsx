@@ -5,11 +5,11 @@ import {
   DropdownDivider,
   DropdownItem,
   Navbar as FlowNavbar,
-  NavbarBrand,
   
   
 } from "flowbite-react";
 import { useContext,useEffect,useState } from "react";
+import { useLocation } from "react-router";
 import { Link, NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../context/AuthContext";
 import type { User1 } from "../../types/posts";
@@ -21,6 +21,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function Navbar() {
 let { userData, setUserData, isLoading }: { userData: User1 | null; setUserData: (user: User1 | null) => void; isLoading: boolean } = useContext(AuthContext)
+  const location = useLocation();
+  const hideNav = ['/Login', '/'].includes(location.pathname);
+  const showNav = !hideNav && !!userData;
 const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark')
 
 useEffect(() => {
@@ -50,12 +53,14 @@ function getUnreadNotification() {
   <FlowNavbar fluid className="bg-transparent px-0 dark:bg-transparent">
 
 <div className="flex items-center justify-between w-full gap-4">
-      <NavbarBrand as={Link} to="/Feed">
+      <Link to="/Feed" className="flex items-center">
         <img src={imglogo} className="mr-3 h-6 sm:h-9 rounded-2xl" alt="Flowbite React Logo" />
         <span className="hidden lg:inline self-center leading-tight lg:whitespace-nowrap text-[20px] font-bold dark:text-white">Route Posts</span>
-      </NavbarBrand>
+      </Link>
 
-      {userData && <div>
+      {showNav && (
+        <div>
+
       <div className="flex items-center gap-1 rounded-full border border-gray-200 bg-[#F8FAFC] p-1 dark:border-gray-700 dark:bg-gray-800">
       <NavLink
   to="/Feed"
@@ -89,7 +94,8 @@ function getUnreadNotification() {
   )}
 </span> <span className="hidden md:inline">Notifications</span></NavLink>
       </div>
-      </div>}
+      </div>
+      )}
 
       <div className="flex items-center gap-2">
         
@@ -100,7 +106,7 @@ function getUnreadNotification() {
           <i className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
         </button>
 
-{userData ? <Dropdown
+{showNav ? <Dropdown
           arrowIcon={false}
           inline
           label={
@@ -125,7 +131,7 @@ function getUnreadNotification() {
   Logout
 </DropdownItem>
 
-       </Dropdown> : !isLoading && <>
+       </Dropdown> : !isLoading && !hideNav && <>
   <NavLink to="/" className="me-2 mt-1 dark:text-gray-200">Register</NavLink>
   <NavLink to="/Login" className="mt-1 dark:text-gray-200">Login</NavLink>
 </>}
