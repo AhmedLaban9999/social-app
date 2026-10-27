@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNotifications } from '../hooks/useNotifications'
 import { useUnreadCount } from '../hooks/useUnreadCount'
 import PageLoader from '../components/ui/PageLoader'
+import ErrorState from '../components/ui/ErrorState'
 import NotificationItem from '../components/notifications/NotificationItem'
 
 export default function Notifications() {
@@ -72,15 +73,10 @@ export default function Notifications() {
 
         <div className="flex flex-col gap-3 p-3 sm:p-5">
           {isError ? (
-            <div className="flex flex-col items-center gap-3 py-10 text-center">
-              <p className="text-red-600 dark:text-red-400">Failed to load notifications</p>
-              <button
-                onClick={() => refetch()}
-                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-              >
-                Retry
-              </button>
-            </div>
+            <ErrorState
+              message="Failed to load notifications"
+              onRetry={() => refetch()}
+            />
           ) : shownNotifications.length === 0 ? (
             <p className="py-10 text-center text-gray-500 dark:text-gray-400">No notifications here.</p>
           ) : (

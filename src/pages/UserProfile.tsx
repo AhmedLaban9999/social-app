@@ -4,32 +4,44 @@ import { useFollowUser } from '../hooks/useFollowUser'
 import { useUserPosts } from '../hooks/useUserPosts'
 import PostList from '../components/post/PostList'
 import ProfileBanner from '../components/profile/ProfileBanner'
+import PageLoader from '../components/ui/PageLoader'
+import ErrorState from '../components/ui/ErrorState'
 
 export default function UserProfile() {
-    
   const { id } = useParams()
-  const { user, isFollowing } = useUserProfile(id)
+  const { user, isFollowing, isLoading, isError, refetch } = useUserProfile(id)
   const followMutation = useFollowUser(id)
   const handleFollow = () => followMutation.mutate(id)
   const isPending = followMutation.isPending
   const { posts } = useUserPosts(id)
 
-if (!user) return null
+  if (isLoading) {
+    return <PageLoader fullScreen />
+  }
 
- return (
- <div className="mx-auto w-full max-w-6xl px-4 py-8">
-  <title>{user.name}</title>
+  if (isError || !user) {
+    return (
+      <ErrorState
+        message="Failed to load user profile"
+        onRetry={() => refetch()}
+      />
+    )
+  }
 
-  <ProfileBanner
-    user={user}
-    isFollowing={isFollowing}
-    isFollowPending={isPending}
-    onFollow={handleFollow}
-  />
+  return (
+    <div className="mx-auto w-full max-w-6xl px-4 py-8">
+      <title>{user.name}</title>
 
-  <div className="mt-6 flex flex-col gap-6">
-    <PostList posts={posts} />
-  </div>
-</div>
-)
+      <ProfileBanner
+        user={user}
+        isFollowing={isFollowing}
+        isFollowPending={isPending}
+        onFollow={handleFollow}
+      />
+
+      <div className="mt-6 flex flex-col gap-6">
+        <PostList posts={posts} />
+      </div>
+    </div>
+  )
 }

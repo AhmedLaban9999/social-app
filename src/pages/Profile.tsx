@@ -63,7 +63,10 @@ export default function Profile() {
 />
 
 <div className="mt-6 flex flex-col gap-6">
-  <PostList posts={activeTab === 'posts' ? myposts : bookmarks} />
+  <PostList
+    posts={activeTab === 'posts' ? myposts : bookmarks}
+    emptyMessage={activeTab === 'saved' ? 'No saved posts yet.' : "You haven't posted yet."}
+  />
 </div>
     </div>
   </>)

@@ -3,17 +3,23 @@ import PostCard from '../components/post/PostCard'
 import type { Post } from '../types/posts'
 import { usePostDetails } from '../hooks/usePostDetails'
 import PageLoader from '../components/ui/PageLoader'
+import ErrorState from '../components/ui/ErrorState'
 
 export default function PostsDetails() {
   const { id } = useParams()
-  const { isError, isLoading, error, data } = usePostDetails(id)
+  const { isError, isLoading, error, data, refetch } = usePostDetails(id)
 
   if (isLoading) {
-    return <PageLoader variant="bars" size={80} />
+    return <PageLoader variant="bars" size={80} fullScreen />
   }
 
   if (isError) {
-    return <h2 className="text-red-500">{error?.message}</h2>
+    return (
+      <ErrorState
+        message={error?.message || 'Failed to load post'}
+        onRetry={() => refetch()}
+      />
+    )
   }
 
   const post: Post = data?.data.data.post
