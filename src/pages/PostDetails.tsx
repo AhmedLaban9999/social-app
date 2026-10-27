@@ -23,7 +23,7 @@ export default function PostsDetails() {
       {post && <title>{`Post | ${post.user.name}`}</title>}
       <Link
         to="/feed"
-        className="inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50"
+        className="inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
       >
         <i className="fa-solid fa-arrow-left"></i>back
       </Link>

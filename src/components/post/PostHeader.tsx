@@ -40,7 +40,7 @@ export default function PostHeader({
             </UserLink>
           </p>
 
-          <div className="flex items-center gap-1 text-xs text-gray-500">
+          <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
             <span>{dayjs(createdAt).fromNow()}</span>
             <span>·</span>
             <i className="fa-solid fa-earth-americas"></i>
@@ -52,7 +52,7 @@ export default function PostHeader({
       <Dropdown
         inline
         arrowIcon={false}
-        label={<i className="fa-solid fa-ellipsis text-gray-500 text-lg"></i>}
+        label={<i className="fa-solid fa-ellipsis text-gray-500 text-lg dark:text-gray-400"></i>}
       >
         <DropdownItem onClick={onToggleBookmark}>
           <i className={`${bookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark me-3 w-4`}></i>

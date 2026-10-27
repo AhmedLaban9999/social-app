@@ -28,21 +28,21 @@ export default function ProfileBanner({
 }: ProfileBannerProps) {
   if (!editable) {
     return (
-      <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm">
+      <div className="w-full overflow-hidden rounded-3xl bg-white shadow-sm dark:bg-gray-800">
         <div
           className="h-56 bg-linear-to-r from-slate-800 via-blue-900 to-sky-500 bg-cover bg-center"
           style={user.cover ? { backgroundImage: `url(${user.cover})` } : undefined}
         ></div>
 
-        <div className="relative mx-4 -mt-20 mb-6 rounded-3xl bg-white/90 p-6 backdrop-blur md:mx-10">
+        <div className="relative mx-4 -mt-20 mb-6 rounded-3xl bg-white/90 p-6 backdrop-blur md:mx-10 dark:bg-gray-800/90">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-start">
-              <div className="rounded-full border-4 border-white bg-white shadow-sm">
+              <div className="rounded-full border-4 border-white bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <UserAvatar src={user.photo} size="xl" />
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold text-gray-900">{user.name}</h1>
-                <p className="text-lg text-gray-500">@{user.username}</p>
+                <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">{user.name}</h1>
+                <p className="text-lg text-gray-500 dark:text-gray-400">@{user.username}</p>
               </div>
             </div>
 
@@ -50,7 +50,9 @@ export default function ProfileBanner({
               onClick={() => onFollow?.()}
               disabled={isFollowPending}
               className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold disabled:opacity-60 ${
-                isFollowing ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-blue-600 text-white hover:bg-blue-700'
+                isFollowing
+                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
             >
               <i className={`fa-solid ${isFollowing ? 'fa-user-check' : 'fa-user-plus'}`}></i>

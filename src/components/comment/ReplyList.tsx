@@ -20,7 +20,7 @@ export default function ReplyList({
   if (!enabled) return null
 
   return (
-    <div className="mt-2 flex flex-col gap-3 border-s-2 border-gray-200 ps-4">
+    <div className="mt-2 flex flex-col gap-3 border-s-2 border-gray-200 ps-4 dark:border-gray-700">
       {replies.map((reply) => (
         <ReplyCard key={reply._id} reply={reply} />
       ))}

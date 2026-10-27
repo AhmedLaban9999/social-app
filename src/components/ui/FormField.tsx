@@ -36,7 +36,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(function FormFiel
 
   return (
     <div>
-      {label && <label className="mb-2 block font-bold text-gray-800">{label}</label>}
+      {label && <label className="mb-2 block font-bold text-gray-800 dark:text-gray-200">{label}</label>}
       {children ? (
         children
       ) : (
@@ -47,7 +47,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(function FormFiel
               type={resolvedType}
               className={
                 className ??
-                `w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 ${showPasswordToggle ? 'pe-11' : ''} focus:border-blue-500 focus:ring-blue-500`
+                `w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-gray-900 placeholder-gray-400 ${showPasswordToggle ? 'pe-11' : ''} focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400`
               }
               {...inputProps}
             />
@@ -76,9 +76,9 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(function FormFiel
         </div>
       )}
       {error ? (
-        <p className={`${errorMargin} text-sm text-red-500`}>{error}</p>
+        <p className={`${errorMargin} text-sm text-red-500 dark:text-red-400`}>{error}</p>
       ) : helperText ? (
-        <p className={`${errorMargin} text-sm text-gray-500`}>{helperText}</p>
+        <p className={`${errorMargin} text-sm text-gray-500 dark:text-gray-400`}>{helperText}</p>
       ) : null}
     </div>
   )

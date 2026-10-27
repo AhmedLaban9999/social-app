@@ -45,11 +45,11 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
       <UserAvatar src={comment.commentCreator.photo} size="sm" userId={comment.commentCreator._id} />
 
       <div className="min-w-0 flex-1">
-        <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-4 py-3">
-          <UserLink userId={comment.commentCreator._id} className="block text-sm font-bold text-gray-900">
+        <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-4 py-3 dark:bg-gray-800">
+          <UserLink userId={comment.commentCreator._id} className="block text-sm font-bold text-gray-900 dark:text-white">
             {comment.commentCreator.name}
           </UserLink>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             @{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}
           </p>
           {comment.image && (
@@ -60,12 +60,12 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
               <input
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
               <div className="mt-2 flex justify-end gap-2">
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200"
+                  className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
                   Cancel
                 </button>
@@ -78,22 +78,22 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
               </div>
             </div>
           ) : (
-            <p className="mt-1 text-gray-800">{comment.content}</p>
+            <p className="mt-1 text-gray-800 dark:text-gray-200">{comment.content}</p>
           )}
         </div>
 
         <div className="mt-1 flex items-center justify-between ps-1 text-xs">
-          <div className="flex items-center gap-4 text-gray-500">
+          <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
             <span>{dayjs(comment.createdAt).format('MMM D, h:mm A')}</span>
             <button
               onClick={() => handleLikeComment(comment._id)}
-              className="font-semibold hover:text-blue-600"
+              className="font-semibold hover:text-blue-600 dark:hover:text-blue-400"
             >
               Like ({comment.likes.length})
             </button>
             <button
               onClick={() => setShowReplies((prev) => !prev)}
-              className="font-semibold hover:text-blue-600"
+              className="font-semibold hover:text-blue-600 dark:hover:text-blue-400"
             >
               Reply
             </button>
@@ -102,7 +102,7 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
             <Dropdown
               inline
               arrowIcon={false}
-              label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600"></i>}
+              label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"></i>}
             >
               <DropdownItem
                 onClick={() => {
@@ -112,7 +112,7 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
               >
                 <i className="fa-solid fa-pen me-3 w-4"></i> Edit
               </DropdownItem>
-              <DropdownItem onClick={handleDeleteComment} className="text-red-600 hover:bg-red-50">
+              <DropdownItem onClick={handleDeleteComment} className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30">
                 <i className="fa-regular fa-trash-can me-3 w-4"></i> Delete
               </DropdownItem>
             </Dropdown>
@@ -122,7 +122,7 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
         {(comment.repliesCount > 0 || showReplies) && (
           <button
             onClick={() => setShowReplies((prev) => !prev)}
-            className="mt-2 w-fit text-xs font-semibold text-blue-600 hover:underline"
+            className="mt-2 w-fit text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400"
           >
             <i className="fa-solid fa-reply me-1 rotate-180"></i>{' '}
             {showReplies ? 'Hide replies' : `View ${comment.repliesCount} replies`}

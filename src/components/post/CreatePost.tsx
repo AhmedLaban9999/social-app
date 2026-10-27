@@ -61,7 +61,7 @@ const [picture,setpicture]=useState<File | null>(null)
           <Dropdown
             inline
             label={
-              <span className="mt-1 flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700">
+              <span className="mt-1 flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-200">
                <i className={privacyIcons[privacy]}></i> {privacy} 
               </span>
             }
@@ -79,7 +79,7 @@ const [picture,setpicture]=useState<File | null>(null)
         value={content}
      onChange={(e)=>setcontent(e.target.value)}
         placeholder={`What's on your mind, ${name.split(" ")[0]}?`}
-        className="rounded-2xl bg-gray-50 p-4"
+        className="rounded-2xl bg-gray-50 p-4 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
       />
 
       
@@ -93,7 +93,7 @@ const [picture,setpicture]=useState<File | null>(null)
         mode="picker"
       />
 
-      <div className="flex items-center justify-between border-t border-gray-200 pt-3">
+      <div className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-gray-700">
         <div className="flex items-center gap-2">
           <MediaUploadInput value={picture} onChange={setpicture} variant="post" mode="trigger" />
 

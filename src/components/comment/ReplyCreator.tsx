@@ -38,14 +38,14 @@ export default function ReplyCreator({
   return (
     <div className="flex items-start gap-2">
       <UserAvatar src={userData?.photo} size="xs" />
-      <div className="flex flex-1 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-1.5">
+      <div className="flex flex-1 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-1.5 dark:border-gray-700 dark:bg-gray-800">
         <input
           onChange={(e) => setReplyText(e.target.value)}
           value={replyText}
           ref={inputRef}
           type="text"
           placeholder={`Reply to ${replyToName}...`}
-          className="flex-1 border-0 bg-transparent p-0 text-sm focus:ring-0 focus:outline-none"
+          className="flex-1 border-0 bg-transparent p-0 text-sm text-gray-900 placeholder-gray-400 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400"
         />
         <button
           onClick={handleCreateReply}

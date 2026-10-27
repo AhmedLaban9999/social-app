@@ -25,7 +25,7 @@ export default function EmojiToggle({
       <button
         type="button"
         onClick={handleToggle}
-        className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-200"
+        className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
       >
         <i className="fa-regular fa-face-smile text-lg"></i>
       </button>
@@ -33,7 +33,7 @@ export default function EmojiToggle({
       <button
         type="button"
         onClick={handleToggle}
-        className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100"
+        className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
       >
         <i className="fa-regular fa-face-smile text-lg text-orange-500"></i>
         <span className="hidden md:inline">Feeling/activity</span>

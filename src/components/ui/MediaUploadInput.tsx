@@ -70,7 +70,7 @@ export default function MediaUploadInput({
 
   const triggerElement =
     variant === 'comment' ? (
-      <label className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200">
+      <label className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700">
         <i className="fa-regular fa-image text-lg"></i>
         <input
           ref={inputRef}
@@ -81,7 +81,7 @@ export default function MediaUploadInput({
         />
       </label>
     ) : (
-      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100">
+      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
         <i className="fa-regular fa-image text-lg text-green-600"></i>
         <span className="hidden md:inline">Photo/video</span>
         <input

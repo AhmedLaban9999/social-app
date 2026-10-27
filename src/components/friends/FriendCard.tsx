@@ -19,29 +19,29 @@ export default function FriendCard({
 }: FriendCardProps) {
   if (variant === 'card') {
     return (
-      <div className="rounded-2xl border border-gray-200 p-4">
+      <div className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-3">
             <UserAvatar src={friend.photo} size="md" userId={friend._id} />
             <div className="min-w-0">
-              <UserLink userId={friend._id} className="block truncate font-bold text-gray-900">
+              <UserLink userId={friend._id} className="block truncate font-bold text-gray-900 dark:text-white">
                 {friend.name}
               </UserLink>
-              <p className="truncate text-sm text-gray-500">{friend.username}</p>
+              <p className="truncate text-sm text-gray-500 dark:text-gray-400">{friend.username}</p>
             </div>
           </div>
           <button
             onClick={onFollow ? () => onFollow(friend._id) : undefined}
             disabled={isPending || undefined}
-            className="flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-600 hover:bg-blue-100"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
           >
             <i className={`fa-solid ${isFollowing ? 'fa-user-check' : 'fa-user-plus'} text-xs`}></i> {isFollowing ? 'Following' : 'Follow'}
           </button>
         </div>
         <div className="mt-3 flex gap-2 text-xs">
-          <span className="rounded-full bg-gray-100 px-2.5 py-1 text-gray-600">{friend.followersCount} followers</span>
+          <span className="rounded-full bg-gray-100 px-2.5 py-1 text-gray-600 dark:bg-gray-700 dark:text-gray-300">{friend.followersCount} followers</span>
           {friend.mutualFollowersCount > 0 && (
-            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-600">{friend.mutualFollowersCount} mutual</span>
+            <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">{friend.mutualFollowersCount} mutual</span>
           )}
         </div>
       </div>
