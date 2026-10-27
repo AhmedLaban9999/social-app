@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import { useState } from 'react';
 import { useAllSuggestions } from '../hooks/useAllSuggestions'
-import UserAvatar from '../components/ui/UserAvatar'
+import FriendCard from '../components/friends/FriendCard'
 
 
 export default function AllSuggestions() {
@@ -43,24 +43,7 @@ export default function AllSuggestions() {
     
         <div className="grid gap-4 md:grid-cols-2">
          {friends.map((el)=>{
-          return  <div key={el._id} className="rounded-2xl border border-gray-200 p-4">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex min-w-0 items-center gap-3">
-                <UserAvatar src={el.photo} size="md" />
-                <div className="min-w-0">
-                  <p className="truncate font-bold text-gray-900">{el.name}</p>
-                  <p className="truncate text-sm text-gray-500">{el.username}</p>
-                </div>
-              </div>
-              <button className="flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-600 hover:bg-blue-100">
-                <i className="fa-solid fa-user-plus text-xs"></i> Follow
-              </button>
-            </div>
-            <div className="mt-3 flex gap-2 text-xs">
-              <span className="rounded-full bg-gray-100 px-2.5 py-1 text-gray-600">{el.followersCount} followers</span>
-             {el.mutualFollowersCount > 0 && ( <span className="rounded-full bg-blue-50 px-2.5 py-1 text-blue-600">{el.mutualFollowersCount} mutual</span>)}
-            </div>
-          </div>
+          return <FriendCard key={el._id} friend={el} variant="card" />
          })}
 
         

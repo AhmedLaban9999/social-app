@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useSuggestions } from "../../hooks/useSuggestions";
 import { useFollowUser } from "../../hooks/useFollowUser";
-import UserAvatar from "../ui/UserAvatar";
+import FriendCard from "./FriendCard";
 
 
 
@@ -38,31 +38,12 @@ export default function SuggestedFriends() {
 
       <div className="flex flex-col gap-2.5">
         {friends.map((friend) => (
-          <div key={friend._id} className="rounded-2xl border border-gray-200 px-3 py-2.5 dark:border-gray-700">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex min-w-0 items-center gap-3">
-                <UserAvatar src={friend.photo} size="sm" />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{friend.name}</p>
-                  <p className="truncate text-sm text-gray-500 dark:text-gray-400">@{friend.username}</p>
-                </div>
-              </div>
-              <button onClick={() => mutate(friend._id)} className="flex shrink-0 items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50">
-                <i className="fa-solid fa-user-plus text-sm"></i> Follow
-              </button>
-            </div>
-
-            <div className="mt-2 flex gap-2 text-xs">
-              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                {friend.followersCount} followers
-              </span>
-              {friend.mutualFollowersCount > 0 && (
-                <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                  {friend.mutualFollowersCount} mutual
-                </span>
-              )}
-            </div>
-          </div>
+          <FriendCard
+            key={friend._id}
+            friend={friend}
+            variant="compact"
+            onFollow={(id) => mutate(id)}
+          />
         ))}
       </div>
 

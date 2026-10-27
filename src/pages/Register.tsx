@@ -1,11 +1,12 @@
 import { Button, Datepicker, Select } from "flowbite-react";
-import { useNavigate, NavLink } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from 'sweetalert2'
 import { useAuthActions } from "../hooks/useAuthActions";
 import FormField from "../components/ui/FormField";
+import AuthFormLayout from "../components/auth/AuthFormLayout";
 
 
 
@@ -75,100 +76,64 @@ setTimeout(()=>{
 })
     }
   return (
-    <div className="flex min-h-screen items-center px-4 py-10">
-      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-2">
-
-  
-        <div className="hidden lg:block">
-          <h1 className="text-6xl font-extrabold tracking-tight text-blue-900 dark:text-blue-400">Route Posts</h1>
-          <p className="mt-4 max-w-xl text-2xl text-gray-700 dark:text-gray-300">
-            Join the community and start sharing your moments with friends.
-          </p>
-          <ul className="mt-8 flex flex-col gap-4 text-lg text-gray-700 dark:text-gray-300">
-            <li className="flex items-center gap-3">
-              <i className="fa-solid fa-pen-to-square w-6 text-blue-600 dark:text-blue-400"></i> Share posts and photos
-            </li>
-            <li className="flex items-center gap-3">
-              <i className="fa-solid fa-comments w-6 text-blue-600 dark:text-blue-400"></i> Comment and reply in real time
-            </li>
-            <li className="flex items-center gap-3">
-              <i className="fa-solid fa-user-group w-6 text-blue-600 dark:text-blue-400"></i> Follow friends and discover new people
-            </li>
-          </ul>
+    <AuthFormLayout activeTab="register">
+      <form onSubmit={handleSubmit(handleApi)} className="flex flex-col gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField
+            {...register('name')}
+            placeholder="Full name"
+            icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
+            error={errors.name?.message}
+          />
+          <FormField
+            {...register('username')}
+            placeholder="Username"
+            icon={() => <i className="fa-solid fa-at text-gray-400"></i>}
+            error={errors.username?.message}
+          />
         </div>
 
-          <div className="w-full max-w-md justify-self-center rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:justify-self-end dark:bg-gray-800">
-          <div className="mb-6 grid grid-cols-2 rounded-2xl bg-slate-100 p-1 dark:bg-gray-900">
-            <NavLink to="/Login" className="rounded-xl py-2.5 text-center font-bold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-              Login
-            </NavLink>
-            <span className="rounded-xl bg-white py-2.5 text-center font-bold text-blue-900 shadow-sm dark:bg-gray-700 dark:text-blue-400">
-              Register
-            </span>
-          </div>
+        <FormField
+          {...register('email')}
+          type="email"
+          placeholder="Email"
+          icon={() => <i className="fa-regular fa-envelope text-gray-400"></i>}
+          error={errors.email?.message}
+        />
 
-          <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">Create your account</h2>
-          <p className="mt-1 mb-6 text-gray-500 dark:text-gray-400">It's quick and easy.</p>
-
-          <form onSubmit={handleSubmit(handleApi)} className="flex flex-col gap-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                {...register('name')}
-                placeholder="Full name"
-                icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
-                error={errors.name?.message}
-              />
-              <FormField
-                {...register('username')}
-                placeholder="Username"
-                icon={() => <i className="fa-solid fa-at text-gray-400"></i>}
-                error={errors.username?.message}
-              />
-            </div>
-
-            <FormField
-              {...register('email')}
-              type="email"
-              placeholder="Email"
-              icon={() => <i className="fa-regular fa-envelope text-gray-400"></i>}
-              error={errors.email?.message}
-            />
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField error={errors.dateOfBirth?.message}>
-                <Datepicker onChange={(date) => { date && setValue('dateOfBirth', date) }} placeholder="Date of birth" />
-              </FormField>
-              <FormField error={errors.gender?.message}>
-                <Select {...register('gender')}>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </Select>
-              </FormField>
-            </div>
-
-            <FormField
-              {...register('password')}
-              type="password"
-              placeholder="Password"
-              icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
-              error={errors.password?.message}
-            />
-
-            <FormField
-              {...register('rePassword')}
-              type="password"
-              placeholder="Confirm password"
-              icon={() => <i className="fa-solid fa-lock text-gray-400"></i>}
-              error={errors.rePassword?.message}
-            />
-
-            <Button type="submit" size="lg" className="w-full bg-blue-900 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
-              Create account
-            </Button>
-          </form>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField error={errors.dateOfBirth?.message}>
+            <Datepicker onChange={(date) => { date && setValue('dateOfBirth', date) }} placeholder="Date of birth" />
+          </FormField>
+          <FormField error={errors.gender?.message}>
+            <Select {...register('gender')}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </Select>
+          </FormField>
         </div>
-      </div>
-    </div>
+
+        <FormField
+          {...register('password')}
+          type="password"
+          placeholder="Password"
+          icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
+          error={errors.password?.message}
+        />
+
+        <FormField
+          {...register('rePassword')}
+          type="password"
+          placeholder="Confirm password"
+          icon={() => <i className="fa-solid fa-lock text-gray-400"></i>}
+          error={errors.rePassword?.message}
+        />
+
+        <Button type="submit" size="lg" className="w-full bg-blue-900 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
+          Create account
+        </Button>
+      </form>
+    </AuthFormLayout>
   )
 
 }
