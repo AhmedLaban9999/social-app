@@ -73,12 +73,16 @@ export default function Register() {
           <FormField
             {...register("name")}
             placeholder="Full name"
+            aria-label="Full name"
+            autoComplete="name"
             icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
             error={errors.name?.message}
           />
           <FormField
             {...register("username")}
             placeholder="Username"
+            aria-label="Username"
+            autoComplete="username"
             icon={() => <i className="fa-solid fa-at text-gray-400"></i>}
             error={errors.username?.message}
           />
@@ -88,6 +92,8 @@ export default function Register() {
           {...register("email")}
           type="email"
           placeholder="Email"
+          aria-label="Email"
+          autoComplete="email"
           icon={() => <i className="fa-regular fa-envelope text-gray-400"></i>}
           error={errors.email?.message}
         />
@@ -105,7 +111,7 @@ export default function Register() {
             />
           </FormField>
           <FormField error={errors.gender?.message}>
-            <Select {...register("gender")}>
+            <Select {...register("gender")} aria-label="Gender">
               <option value="male">Male</option>
               <option value="female">Female</option>
             </Select>
@@ -117,6 +123,8 @@ export default function Register() {
             {...register("password")}
             type="password"
             placeholder="Password"
+            aria-label="Password"
+            autoComplete="new-password"
             showPasswordToggle
             icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
             error={errors.password?.message}
@@ -128,6 +136,8 @@ export default function Register() {
           {...register("rePassword")}
           type="password"
           placeholder="Confirm password"
+          aria-label="Confirm password"
+          autoComplete="new-password"
           showPasswordToggle
           icon={() => <i className="fa-solid fa-lock text-gray-400"></i>}
           error={errors.rePassword?.message}

@@ -53,8 +53,10 @@ export default function PostActions({
 
       <div className="mx-2 sm:mx-4 flex gap-2 border-t border-gray-200 py-2 dark:border-gray-700">
         <Button
+          type="button"
           onClick={onLike}
           disabled={isLikePending}
+          aria-label="Like post"
           color="light"
           className={`flex-1 border-0 ${
             isLiked
@@ -62,17 +64,24 @@ export default function PostActions({
               : 'bg-white text-gray-600 dark:bg-transparent dark:text-gray-300'
           } hover:bg-blue-100 dark:hover:bg-gray-700`}
         >
-          <i className="fa-regular fa-thumbs-up sm:me-2"></i> <span className="hidden sm:inline">Like</span>
-        </Button>
-        <Button color="light" className="flex-1 border-0 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700">
-          <i className="fa-regular fa-comment sm:me-2"></i> <span className="hidden sm:inline">Comment</span>
+          <i aria-hidden="true" className="fa-regular fa-thumbs-up sm:me-2"></i> <span className="hidden sm:inline">Like</span>
         </Button>
         <Button
-          onClick={onShareClick}
+          type="button"
+          aria-label="Comment on post"
           color="light"
           className="flex-1 border-0 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700"
         >
-          <i className="fa-solid fa-share-nodes sm:me-2"></i> <span className="hidden sm:inline">Share</span>
+          <i aria-hidden="true" className="fa-regular fa-comment sm:me-2"></i> <span className="hidden sm:inline">Comment</span>
+        </Button>
+        <Button
+          type="button"
+          onClick={onShareClick}
+          aria-label="Share post"
+          color="light"
+          className="flex-1 border-0 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+          <i aria-hidden="true" className="fa-solid fa-share-nodes sm:me-2"></i> <span className="hidden sm:inline">Share</span>
         </Button>
       </div>
     </>

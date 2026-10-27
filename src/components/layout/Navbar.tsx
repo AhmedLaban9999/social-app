@@ -37,10 +37,12 @@ export default function Navbar() {
 
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={toggle}
+                aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-[#F8FAFC] text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-yellow-400 dark:hover:bg-gray-700"
               >
-                <i className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
+                <i aria-hidden="true" className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
               </button>
 
               {showNav ? (

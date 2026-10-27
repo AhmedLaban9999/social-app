@@ -68,6 +68,8 @@ export default function Login() {
           {...register("email")}
           type="email"
           placeholder="Email"
+          aria-label="Email"
+          autoComplete="email"
           sizing="lg"
           icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
           error={errors.email?.message}
@@ -77,6 +79,8 @@ export default function Login() {
           {...register("password")}
           type="password"
           placeholder="Password"
+          aria-label="Password"
+          autoComplete="current-password"
           sizing="lg"
           showPasswordToggle
           icon={() => <i className="fa-solid fa-key text-gray-400"></i>}

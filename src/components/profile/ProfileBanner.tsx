@@ -76,8 +76,11 @@ export default function ProfileBanner({
         className="relative h-56 bg-linear-to-r from-slate-800 via-blue-900 to-sky-500 bg-cover bg-center"
         style={user.cover ? { backgroundImage: `url(${user.cover})` } : undefined}
       >
-        <label className="absolute top-4 right-4 flex cursor-pointer items-center gap-2 rounded-xl bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-black/60">
-          <i className="fa-solid fa-camera"></i>
+        <label
+          aria-label="Change cover photo"
+          className="absolute top-4 right-4 flex cursor-pointer items-center gap-2 rounded-xl bg-black/40 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-black/60"
+        >
+          <i aria-hidden="true" className="fa-solid fa-camera"></i>
           <span className="hidden sm:inline">Change cover</span>
           <input
             type="file"
@@ -94,22 +97,29 @@ export default function ProfileBanner({
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-start">
             <div className="relative">
-              <div
+              <button
+                type="button"
                 onClick={onPhotoClick}
+                aria-label="View profile photo"
                 className="cursor-pointer rounded-full border-4 border-blue-100 bg-white p-1 dark:border-gray-700 dark:bg-gray-800"
               >
                 <UserAvatar src={user.photo} size="xl" />
-              </div>
-
-              <button
-                onClick={onPhotoClick}
-                className="absolute bottom-0 left-0 flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-blue-600 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-blue-400 dark:hover:bg-gray-600"
-              >
-                <i className="fa-solid fa-expand"></i>
               </button>
 
-              <label className="absolute right-0 bottom-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 hover:bg-blue-700">
-                <i className="fa-solid fa-camera"></i>
+              <button
+                type="button"
+                onClick={onPhotoClick}
+                aria-label="Expand profile photo"
+                className="absolute bottom-0 left-0 flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-blue-600 shadow-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-blue-400 dark:hover:bg-gray-600"
+              >
+                <i aria-hidden="true" className="fa-solid fa-expand"></i>
+              </button>
+
+              <label
+                aria-label="Upload profile photo"
+                className="absolute right-0 bottom-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-blue-600 text-white shadow-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100 hover:bg-blue-700"
+              >
+                <i aria-hidden="true" className="fa-solid fa-camera"></i>
                 <input
                   onChange={(e) => {
                     e.target.files?.[0] && onPhotoChange?.(e.target.files[0])

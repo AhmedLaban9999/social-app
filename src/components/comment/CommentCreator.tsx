@@ -74,11 +74,13 @@ export default function CommentCreator({ name, photo, postId }: CommentCreatorPr
             </div>
 
             <button
+              type="button"
               onClick={handleCreateComment}
+              aria-label="Post comment"
               disabled={createComment.isPending || (!content.trim() && !picture)}
               className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300"
             >
-              <i className="fa-regular fa-paper-plane"></i>
+              <i aria-hidden="true" className="fa-regular fa-paper-plane"></i>
             </button>
           </div>
         </div>

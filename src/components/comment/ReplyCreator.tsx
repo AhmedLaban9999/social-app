@@ -48,10 +48,12 @@ export default function ReplyCreator({
           className="flex-1 border-0 bg-transparent p-0 text-sm text-gray-900 placeholder-gray-400 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400"
         />
         <button
+          type="button"
           onClick={handleCreateReply}
+          aria-label="Post reply"
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs text-white hover:bg-blue-700"
         >
-          <i className="fa-regular fa-paper-plane"></i>
+          <i aria-hidden="true" className="fa-regular fa-paper-plane"></i>
         </button>
       </div>
     </div>

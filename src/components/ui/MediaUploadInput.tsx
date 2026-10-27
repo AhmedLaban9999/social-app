@@ -49,9 +49,10 @@ export default function MediaUploadInput({
           <button
             type="button"
             onClick={handleRemove}
+            aria-label="Remove attached image"
             className="absolute top-1 right-1 h-6 w-6 rounded-full bg-gray-900/60 text-xs text-white"
           >
-            <i className="fa-solid fa-xmark"></i>
+            <i aria-hidden="true" className="fa-solid fa-xmark"></i>
           </button>
         </div>
       ) : (
@@ -60,9 +61,10 @@ export default function MediaUploadInput({
           <button
             type="button"
             onClick={handleRemove}
+            aria-label="Remove attached image"
             className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gray-900/60 text-white"
           >
-            <i className="fa-solid fa-xmark"></i>
+            <i aria-hidden="true" className="fa-solid fa-xmark"></i>
           </button>
         </div>
       )
@@ -70,8 +72,11 @@ export default function MediaUploadInput({
 
   const triggerElement =
     variant === 'comment' ? (
-      <label className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700">
-        <i className="fa-regular fa-image text-lg"></i>
+      <label
+        aria-label="Attach image"
+        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+      >
+        <i aria-hidden="true" className="fa-regular fa-image text-lg"></i>
         <input
           ref={inputRef}
           type="file"
@@ -81,8 +86,11 @@ export default function MediaUploadInput({
         />
       </label>
     ) : (
-      <label className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">
-        <i className="fa-regular fa-image text-lg text-green-600"></i>
+      <label
+        aria-label="Attach photo or video"
+        className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+      >
+        <i aria-hidden="true" className="fa-regular fa-image text-lg text-green-600"></i>
         <span className="hidden md:inline">Photo/video</span>
         <input
           ref={inputRef}

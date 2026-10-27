@@ -11,10 +11,12 @@ export default function PhotoLightbox({ src, alt = '', open, onClose }: PhotoLig
   return (
     <Modal open={open} onClose={onClose} bare>
       <button
+        type="button"
         onClick={onClose}
+        aria-label="Close photo preview"
         className="absolute top-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-2xl text-white hover:bg-white/20"
       >
-        <i className="fa-solid fa-xmark"></i>
+        <i aria-hidden="true" className="fa-solid fa-xmark"></i>
       </button>
 
       <img

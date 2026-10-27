@@ -79,6 +79,8 @@ export default function ChangePassword() {
             {...register("password")}
             variant="native"
             label="Current password"
+            aria-label="Current password"
+            autoComplete="current-password"
             type="password"
             showPasswordToggle
             placeholder="Enter current password"
@@ -90,6 +92,8 @@ export default function ChangePassword() {
               {...register("newPassword")}
               variant="native"
               label="New password"
+              aria-label="New password"
+              autoComplete="new-password"
               type="password"
               showPasswordToggle
               placeholder="Enter new password"
@@ -103,6 +107,8 @@ export default function ChangePassword() {
             {...register("rePassword")}
             variant="native"
             label="Confirm new password"
+            aria-label="Confirm new password"
+            autoComplete="new-password"
             type="password"
             showPasswordToggle
             placeholder="Re-enter new password"
