@@ -1,9 +1,11 @@
 import { useState } from "react";
-import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
+import { type EmojiClickData } from "emoji-picker-react";
 import Swal from "sweetalert2";
 import { useCommentActions } from "../../hooks/useCommentActions";
 import { getApiErrorMessage } from "../../utils/getApiErrorMessage";
 import UserAvatar from "../ui/UserAvatar";
+import EmojiToggle from "../ui/EmojiToggle";
+import MediaUploadInput from "../ui/MediaUploadInput";
 
 interface CommentCreatorProps {
   name: string;
@@ -60,37 +62,19 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
           />
 
          
-          {picture && (
-            <div className="relative mt-2 w-32">
-              <img src={URL.createObjectURL(picture)} alt="preview" className="h-24 w-32 rounded-lg object-cover" />
-              <button
-                onClick={() => setPicture(null)}
-                className="absolute top-1 right-1 h-6 w-6 rounded-full bg-gray-900/60 text-xs text-white"
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-          )}
+          <MediaUploadInput value={picture} onChange={setPicture} variant="comment" mode="preview" />
 
-      
           <div className="mt-2 flex items-center justify-between">
             <div className="flex items-center gap-1 text-gray-500">
-              <label className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200">
-                <i className="fa-regular fa-image text-lg"></i>
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={(e) => setPicture(e.target.files?.[0] ?? null)}
-                />
-              </label>
+              <MediaUploadInput value={picture} onChange={setPicture} variant="comment" mode="trigger" />
 
-              <button
-                onClick={() => setShowEmoji(!showEmoji)}
-                className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-200"
-              >
-                <i className="fa-regular fa-face-smile text-lg"></i>
-              </button>
+              <EmojiToggle
+                open={showEmoji}
+                onToggle={() => setShowEmoji(!showEmoji)}
+                onEmojiSelect={handleEmoji}
+                variant="comment"
+                mode="button"
+              />
             </div>
 
             <button
@@ -104,11 +88,13 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
         </div>
       </div>
 
-      {showEmoji && (
-        <div className="mt-2 ms-12">
-          <EmojiPicker onEmojiClick={handleEmoji} width="100%" height={320} />
-        </div>
-      )}
+      <EmojiToggle
+        open={showEmoji}
+        onToggle={() => setShowEmoji(!showEmoji)}
+        onEmojiSelect={handleEmoji}
+        variant="comment"
+        mode="picker"
+      />
     </div>
   );
 }

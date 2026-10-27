@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button, Card, Dropdown, DropdownItem, Textarea } from "flowbite-react";
-import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
+import { type EmojiClickData } from "emoji-picker-react";
 import Swal from "sweetalert2";
 import { useCreatePost } from "../../hooks/useCreatePost";
 import UserAvatar from "../ui/UserAvatar";
+import EmojiToggle from "../ui/EmojiToggle";
+import MediaUploadInput from "../ui/MediaUploadInput";
 
 
 interface CreatePostProps {
@@ -81,42 +83,27 @@ const [picture,setpicture]=useState<File | null>(null)
       />
 
       
-      {picture && (
-        <div className="relative">
-          <img src={URL.createObjectURL(picture)} alt="preview" className="max-h-72 w-full rounded-xl object-cover" />
-          <button
-            onClick={() => setpicture(null)}
-            className="absolute top-2 right-2 h-8 w-8 rounded-full bg-gray-900/60 text-white"
-          >
-            <i className="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      )}
+      <MediaUploadInput value={picture} onChange={setpicture} variant="post" mode="preview" />
 
-  
-      {showEmoji && <EmojiPicker onEmojiClick={handleEmoji} width="100%" height={350} />}
+      <EmojiToggle
+        open={showEmoji}
+        onToggle={() => setShowEmoji(!showEmoji)}
+        onEmojiSelect={handleEmoji}
+        variant="post"
+        mode="picker"
+      />
 
-   
       <div className="flex items-center justify-between border-t border-gray-200 pt-3">
         <div className="flex items-center gap-2">
-          <label className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100">
-           <i className="fa-regular fa-image text-lg text-green-600"></i>
-<span className="hidden md:inline">Photo/video</span>
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-             onChange={(e) => setpicture(e.target.files?.[0] ?? null)}
-            />
-          </label>
+          <MediaUploadInput value={picture} onChange={setpicture} variant="post" mode="trigger" />
 
-          <button
-            onClick={() => setShowEmoji(!showEmoji)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-gray-600 hover:bg-gray-100"
-          >
-       <i className="fa-regular fa-face-smile text-lg text-orange-500"></i>
-<span className="hidden md:inline">Feeling/activity</span>
-          </button>
+          <EmojiToggle
+            open={showEmoji}
+            onToggle={() => setShowEmoji(!showEmoji)}
+            onEmojiSelect={handleEmoji}
+            variant="post"
+            mode="button"
+          />
         </div>
 
         <Button   onClick={()=>mutate()}>
