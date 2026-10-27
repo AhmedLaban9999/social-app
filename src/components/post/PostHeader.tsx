@@ -52,7 +52,11 @@ export default function PostHeader({
       <Dropdown
         inline
         arrowIcon={false}
-        label={<i className="fa-solid fa-ellipsis text-gray-500 text-lg dark:text-gray-400"></i>}
+        label={
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+            <i aria-hidden="true" className="fa-solid fa-ellipsis text-lg"></i>
+          </span>
+        }
       >
         <DropdownItem onClick={onToggleBookmark}>
           <i className={`${bookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark me-3 w-4`}></i>

@@ -135,7 +135,7 @@ export default function ChangePassword() {
             type="submit"
             className="w-full rounded-2xl bg-blue-600 py-3 font-bold text-white hover:bg-blue-700 disabled:bg-blue-300"
           >
-            {isPending ? "updating" : "update password"}
+            {isPending ? "Updating..." : "Update password"}
           </button>
         </form>
       </div>

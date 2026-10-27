@@ -51,7 +51,7 @@ export default function ReplyCreator({
           type="button"
           onClick={handleCreateReply}
           aria-label="Post reply"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs text-white hover:bg-blue-700"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs text-white hover:bg-blue-700"
         >
           <i aria-hidden="true" className="fa-regular fa-paper-plane"></i>
         </button>

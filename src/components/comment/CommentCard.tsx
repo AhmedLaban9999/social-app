@@ -50,7 +50,7 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
             {comment.commentCreator.name}
           </UserLink>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            @{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}
+            @{comment.commentCreator.username}
           </p>
           {comment.image && (
             <img src={comment.image} alt="comment" className="mt-2 max-h-60 rounded-xl object-cover" />
@@ -102,7 +102,11 @@ export default function CommentCard({ comment, postId }: CommentCardProps) {
             <Dropdown
               inline
               arrowIcon={false}
-              label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"></i>}
+              label={
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300">
+                  <i aria-hidden="true" className="fa-solid fa-ellipsis"></i>
+                </span>
+              }
             >
               <DropdownItem
                 onClick={() => {

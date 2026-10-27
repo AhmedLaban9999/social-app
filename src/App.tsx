@@ -46,7 +46,11 @@ export default function App() {
         {import.meta.env.DEV && <ReactQueryDevtools />}
       </QueryClientProvider>
       <Offline>
-        <p className='fixed bottom-0 right-0 bg-red-600 text-white p-2'>
+        <p
+          role="status"
+          aria-live="polite"
+          className="fixed right-4 bottom-4 z-50 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg"
+        >
           You're offline right now. Check your connection.
         </p>
       </Offline>

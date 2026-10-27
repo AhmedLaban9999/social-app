@@ -50,7 +50,7 @@ export default function MediaUploadInput({
             type="button"
             onClick={handleRemove}
             aria-label="Remove attached image"
-            className="absolute top-1 right-1 h-6 w-6 rounded-full bg-gray-900/60 text-xs text-white"
+            className="absolute top-1 right-1 h-7 w-7 rounded-full bg-gray-900/60 text-xs text-white"
           >
             <i aria-hidden="true" className="fa-solid fa-xmark"></i>
           </button>

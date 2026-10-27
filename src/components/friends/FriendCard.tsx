@@ -27,7 +27,7 @@ export default function FriendCard({
               <UserLink userId={friend._id} className="block truncate font-bold text-gray-900 dark:text-white">
                 {friend.name}
               </UserLink>
-              <p className="truncate text-sm text-gray-500 dark:text-gray-400">{friend.username}</p>
+              <p className="truncate text-sm text-gray-500 dark:text-gray-400">@{friend.username}</p>
             </div>
           </div>
           <button
