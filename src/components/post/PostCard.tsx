@@ -8,6 +8,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { usePostActions } from "../../hooks/usePostActions";
 import UserAvatar from "../ui/UserAvatar";
+import UserLink from "../ui/UserLink";
 
 import { Link } from 'react-router'
 
@@ -41,12 +42,12 @@ return(<>
     
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-3">
-          <UserAvatar src={photo} size="md" />
+          <UserAvatar src={photo} size="md" userId={userId} />
           <div>
             <p className="text-sm text-gray-500">
-              <span className="font-bold text-gray-900 dark:text-white">
+              <UserLink userId={userId} className="font-bold text-gray-900 dark:text-white">
                 {name}
-              </span>
+              </UserLink>
            
             </p>
  
@@ -102,9 +103,11 @@ return(<>
   <div className="mx-4 mb-3 overflow-hidden rounded-2xl border border-gray-200 bg-slate-50 dark:border-gray-700 dark:bg-gray-900">
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center gap-3">
-        <UserAvatar src={sharedPost.user.photo} size="sm" />
+        <UserAvatar src={sharedPost.user.photo} size="sm" userId={sharedPost.user._id} />
         <div>
-          <p className="text-sm font-bold text-gray-900 dark:text-white">{sharedPost.user.name}</p>
+          <UserLink userId={sharedPost.user._id} className="block text-sm font-bold text-gray-900 dark:text-white">
+            {sharedPost.user.name}
+          </UserLink>
           <p className="text-xs text-gray-500 dark:text-gray-400">@{sharedPost.user.username}</p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import type { Friend } from '../../types/Friends'
 import UserAvatar from '../ui/UserAvatar'
+import UserLink from '../ui/UserLink'
 
 interface FriendCardProps {
   friend: Friend
@@ -21,9 +22,11 @@ export default function FriendCard({
       <div className="rounded-2xl border border-gray-200 p-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-3">
-            <UserAvatar src={friend.photo} size="md" />
+            <UserAvatar src={friend.photo} size="md" userId={friend._id} />
             <div className="min-w-0">
-              <p className="truncate font-bold text-gray-900">{friend.name}</p>
+              <UserLink userId={friend._id} className="block truncate font-bold text-gray-900">
+                {friend.name}
+              </UserLink>
               <p className="truncate text-sm text-gray-500">{friend.username}</p>
             </div>
           </div>
@@ -49,9 +52,11 @@ export default function FriendCard({
     <div className="rounded-2xl border border-gray-200 px-3 py-2.5 dark:border-gray-700">
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
-          <UserAvatar src={friend.photo} size="sm" />
+          <UserAvatar src={friend.photo} size="sm" userId={friend._id} />
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{friend.name}</p>
+            <UserLink userId={friend._id} className="block truncate text-sm font-bold text-gray-900 dark:text-white">
+              {friend.name}
+            </UserLink>
             <p className="truncate text-sm text-gray-500 dark:text-gray-400">@{friend.username}</p>
           </div>
         </div>

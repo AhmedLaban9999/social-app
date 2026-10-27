@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { useNotifications } from '../hooks/useNotifications'
 import { useUnreadCount } from '../hooks/useUnreadCount'
 import UserAvatar from '../components/ui/UserAvatar'
+import UserLink from '../components/ui/UserLink'
 
 dayjs.extend(relativeTime)
 
@@ -83,7 +83,7 @@ export default function Notifications() {
                 }`}
               >
                 <div className="relative h-fit shrink-0">
-                  <UserAvatar src={element.actor.photo} size="md" />
+                  <UserAvatar src={element.actor.photo} size="md" userId={element.actor._id} />
                   <span className={`absolute -right-1 -bottom-6 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs shadow-sm dark:bg-gray-700 ${info?.color}`}>
                     <i className={info?.icon}></i>
                   </span>
@@ -92,12 +92,12 @@ export default function Notifications() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <p className="text-gray-700 dark:text-gray-300">
-                      <Link
-                        to={`/user/${element.actor._id}`}
-                        className="font-bold text-gray-900 hover:text-blue-600 hover:underline dark:text-white dark:hover:text-blue-400"
+                      <UserLink
+                        userId={element.actor._id}
+                        className="font-bold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
                       >
                         {element.actor.name}
-                      </Link>{' '}{info?.text}
+                      </UserLink>{' '}{info?.text}
                     </p>
                     <div className="flex shrink-0 items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                       {dayjs(element.createdAt).fromNow()}

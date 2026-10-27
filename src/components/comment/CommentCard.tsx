@@ -3,6 +3,7 @@ import type { CommentItem } from "../../types/comment";
 import dayjs from "dayjs";
 import { useContext, useEffect, useRef, useState } from "react";
 import UserAvatar from "../ui/UserAvatar";
+import UserLink from "../ui/UserLink";
 
 import { AuthContext } from "../../context/AuthContext";
 import { useCommentActions } from "../../hooks/useCommentActions";
@@ -68,12 +69,14 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
   }
   return (
     <div className="flex items-start gap-3">
-      <UserAvatar src={comment.commentCreator.photo} size="sm" />
+      <UserAvatar src={comment.commentCreator.photo} size="sm" userId={comment.commentCreator._id} />
 
       <div className="min-w-0 flex-1">
       
         <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-4 py-3">
-          <p className="text-sm font-bold text-gray-900">{comment.commentCreator.name}</p>
+          <UserLink userId={comment.commentCreator._id} className="block text-sm font-bold text-gray-900">
+            {comment.commentCreator.name}
+          </UserLink>
           <p className="text-xs text-gray-500">@{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}</p>
          {comment.image && <img src={comment.image} alt="comment" className="mt-2 max-h-60 rounded-xl object-cover" />}
          {isEditing ? (
@@ -128,10 +131,12 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
          {replies.map((reply)=>{
             return(
                  <div   key={reply._id} className="flex items-start gap-2">
-            <UserAvatar src={reply.commentCreator.photo} size="xs" />
+            <UserAvatar src={reply.commentCreator.photo} size="xs" userId={reply.commentCreator._id} />
             <div className="min-w-0 flex-1">
               <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-3 py-2">
-                <p className="text-xs font-bold text-gray-900">{reply.commentCreator.name}</p>
+                <UserLink userId={reply.commentCreator._id} className="block text-xs font-bold text-gray-900">
+                  {reply.commentCreator.name}
+                </UserLink>
                 <p className="text-sm text-gray-800">{reply.content}</p>
               </div>
               <div className="mt-1 flex items-center gap-4 ps-1 text-xs text-gray-500">
