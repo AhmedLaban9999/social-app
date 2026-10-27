@@ -11,10 +11,9 @@ import ReplyList from './ReplyList'
 interface CommentCardProps {
   comment: CommentItem
   postId: string
-  refetch: () => void
 }
 
-export default function CommentCard({ comment, postId, refetch }: CommentCardProps) {
+export default function CommentCard({ comment, postId }: CommentCardProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [editText, setEditText] = useState('')
   const [showReplies, setShowReplies] = useState(false)
@@ -27,11 +26,7 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
   }
 
   const handleDeleteComment = () => {
-    deleteComment.mutate(comment._id, {
-      onSuccess: () => {
-        refetch()
-      },
-    })
+    deleteComment.mutate(comment._id)
   }
 
   const handleUpdateComment = () => {
@@ -40,7 +35,6 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
       {
         onSuccess: () => {
           setIsEditing(false)
-          refetch()
         },
       },
     )

@@ -10,11 +10,10 @@ import MediaUploadInput from "../ui/MediaUploadInput";
 interface CommentCreatorProps {
   name: string;
   photo: string;
-  postId:string
-  refetch:()=> void
+  postId: string;
 }
 
-export default function CommentCreator({ name, photo ,postId,refetch}: CommentCreatorProps) {
+export default function CommentCreator({ name, photo, postId }: CommentCreatorProps) {
   const [content, setContent] = useState("");
   const [picture, setPicture] = useState<File | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -24,27 +23,25 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
   function handleEmoji(emojiData: EmojiClickData) {
     setContent((prev) => prev + emojiData.emoji);
   }
- 
 
   function handleCreateComment() {
-    const formData = new FormData()
-    if (content.trim()) formData.append('content', content)
-    if (picture) formData.append('image', picture)
+    const formData = new FormData();
+    if (content.trim()) formData.append("content", content);
+    if (picture) formData.append("image", picture);
     createComment.mutate(formData, {
       onSuccess: () => {
-        setContent('')
-        setPicture(null)
-        setShowEmoji(false)
-        refetch()
+        setContent("");
+        setPicture(null);
+        setShowEmoji(false);
       },
       onError: (err) => {
         Swal.fire({
-          icon: 'error',
-          title: 'Error!',
-          text: getApiErrorMessage(err, 'Failed to create comment'),
-        })
+          icon: "error",
+          title: "Error!",
+          text: getApiErrorMessage(err, "Failed to create comment"),
+        });
       },
-    })
+    });
   }
 
   return (
@@ -61,7 +58,6 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
             className="w-full resize-none border-0 bg-transparent p-0 text-gray-800 placeholder-gray-500 focus:ring-0 focus:outline-none dark:text-white"
           />
 
-         
           <MediaUploadInput value={picture} onChange={setPicture} variant="comment" mode="preview" />
 
           <div className="mt-2 flex items-center justify-between">

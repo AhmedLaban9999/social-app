@@ -7,13 +7,17 @@ import {
 } from '../api/comments.api'
 import { queryKeys } from '../api/queryKeys'
 
-// Comment mutations for one post. Refreshing the visible comment list is still
-// done by the caller through the `refetch` prop (removed in Phase 6).
 export function useCommentActions(postId: string) {
   const queryClient = useQueryClient()
 
   const createComment = useMutation({
     mutationFn: (formData: FormData) => createCommentApi(postId, formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(postId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts })
+      queryClient.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
+      queryClient.invalidateQueries({ queryKey: queryKeys.userPostsAll })
+    },
   })
 
   const editComment = useMutation({
@@ -23,6 +27,7 @@ export function useCommentActions(postId: string) {
       return updateCommentApi(postId, commentId, formdata)
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(postId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.posts })
     },
   })
@@ -30,6 +35,7 @@ export function useCommentActions(postId: string) {
   const deleteComment = useMutation({
     mutationFn: (commentId: string) => deleteCommentApi(postId, commentId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(postId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.posts })
       queryClient.invalidateQueries({ queryKey: queryKeys.postDetailsAll })
       queryClient.invalidateQueries({ queryKey: queryKeys.userPostsAll })
@@ -39,6 +45,7 @@ export function useCommentActions(postId: string) {
   const likeComment = useMutation({
     mutationFn: (commentId: string) => likeCommentApi(postId, commentId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(postId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.posts })
     },
   })

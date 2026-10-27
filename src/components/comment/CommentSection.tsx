@@ -7,20 +7,11 @@ import CommentCreator from './CommentCreator'
 export interface CommentSectionProps {
   postId: string
   enabled: boolean
-  onOpen: () => void
 }
 
-export default function CommentSection({ postId, enabled, onOpen }: CommentSectionProps) {
+export default function CommentSection({ postId, enabled }: CommentSectionProps) {
   const { userData } = useContext(AuthContext)
-  const { comments, refetch } = useComments(postId, { enabled })
-
-  const handleRefresh = () => {
-    if (!enabled) {
-      onOpen()
-    } else {
-      refetch()
-    }
-  }
+  const { comments } = useComments(postId, { enabled })
 
   return (
     <>
@@ -40,23 +31,13 @@ export default function CommentSection({ postId, enabled, onOpen }: CommentSecti
 
         <div className="flex flex-col gap-4">
           {comments?.map((comment) => (
-            <CommentCard
-              key={comment._id}
-              comment={comment}
-              postId={postId}
-              refetch={handleRefresh}
-            />
+            <CommentCard key={comment._id} comment={comment} postId={postId} />
           ))}
         </div>
       </div>
 
       {userData && (
-        <CommentCreator
-          name={userData.name}
-          photo={userData.photo}
-          postId={postId}
-          refetch={handleRefresh}
-        />
+        <CommentCreator name={userData.name} photo={userData.photo} postId={postId} />
       )}
     </>
   )
