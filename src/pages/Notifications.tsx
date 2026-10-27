@@ -1,24 +1,13 @@
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
 import { useNotifications } from '../hooks/useNotifications'
 import { useUnreadCount } from '../hooks/useUnreadCount'
-import UserAvatar from '../components/ui/UserAvatar'
-import UserLink from '../components/ui/UserLink'
-
-dayjs.extend(relativeTime)
-
-const typeInfo: Record<string, { text: string; icon: string; color: string }> = {
-  follow_user: { text: 'followed you', icon: 'fa-solid fa-user-plus', color: 'text-purple-600' },
-  comment_post: { text: 'commented on your post', icon: 'fa-regular fa-comment', color: 'text-blue-600' },
-  like_post: { text: 'liked your post', icon: 'fa-regular fa-heart', color: 'text-rose-500' },
-  share_post: { text: 'shared your post', icon: 'fa-solid fa-retweet', color: 'text-green-600' },
-}
+import PageLoader from '../components/ui/PageLoader'
+import NotificationItem from '../components/notifications/NotificationItem'
 
 export default function Notifications() {
   const [fillter, setfillter] = useState('all')
 
-  const { notifications, markRead, markAllRead } = useNotifications()
+  const { notifications, isLoading, isError, refetch, markRead, markAllRead } = useNotifications()
   const { unreadCount: unreadcount } = useUnreadCount()
 
   const shownNotifications =
@@ -27,16 +16,23 @@ export default function Notifications() {
   const handleisread = (id: string) => markRead.mutate(id)
   const handleReadAll = () => markAllRead.mutate()
 
+  if (isLoading) {
+    return <PageLoader fullScreen />
+  }
+
   return (
     <div className="mx-auto w-full max-w-6xl px-2 py-6 sm:px-4">
       <title>Notifications</title>
       <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
-
         <div className="border-b border-gray-200 p-4 sm:p-6 dark:border-gray-700">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">Notifications</h1>
-              <p className="mt-1 text-gray-500 dark:text-gray-400">Realtime updates for likes, comments, shares, and follows.</p>
+              <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
+                Notifications
+              </h1>
+              <p className="mt-1 text-gray-500 dark:text-gray-400">
+                Realtime updates for likes, comments, shares, and follows.
+              </p>
             </div>
             <button
               onClick={() => handleReadAll()}
@@ -50,13 +46,21 @@ export default function Notifications() {
           <div className="mt-5 flex gap-2">
             <button
               onClick={() => setfillter('all')}
-              className={`rounded-full px-5 py-2 font-semibold ${fillter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-gray-700 hover:bg-slate-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}`}
+              className={`rounded-full px-5 py-2 font-semibold ${
+                fillter === 'all'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-gray-700 hover:bg-slate-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+              }`}
             >
               All
             </button>
             <button
               onClick={() => setfillter('unread')}
-              className={`flex items-center gap-2 rounded-full px-5 py-2 font-semibold ${fillter === 'unread' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-gray-700 hover:bg-slate-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}`}
+              className={`flex items-center gap-2 rounded-full px-5 py-2 font-semibold ${
+                fillter === 'unread'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-gray-700 hover:bg-slate-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+              }`}
             >
               Unread
               {unreadcount > 0 && (
@@ -67,62 +71,27 @@ export default function Notifications() {
         </div>
 
         <div className="flex flex-col gap-3 p-3 sm:p-5">
-          {notifications.length === 0 && (
-            <p className="py-10 text-center text-gray-500 dark:text-gray-400">No notifications here.</p>
-          )}
-
-          {shownNotifications.map((element) => {
-            const info = typeInfo[element.type]
-            return (
-              <div
-                key={element._id}
-                className={`flex gap-4 rounded-2xl border p-4 sm:p-5 ${
-                  element.isRead
-                    ? 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800'
-                    : 'border-blue-100 bg-blue-50 dark:border-blue-900 dark:bg-blue-900/20'
-                }`}
+          {isError ? (
+            <div className="flex flex-col items-center gap-3 py-10 text-center">
+              <p className="text-red-600 dark:text-red-400">Failed to load notifications</p>
+              <button
+                onClick={() => refetch()}
+                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
-                <div className="relative h-fit shrink-0">
-                  <UserAvatar src={element.actor.photo} size="md" userId={element.actor._id} />
-                  <span className={`absolute -right-1 -bottom-6 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs shadow-sm dark:bg-gray-700 ${info?.color}`}>
-                    <i className={info?.icon}></i>
-                  </span>
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="text-gray-700 dark:text-gray-300">
-                      <UserLink
-                        userId={element.actor._id}
-                        className="font-bold text-gray-900 hover:text-blue-600 dark:text-white dark:hover:text-blue-400"
-                      >
-                        {element.actor.name}
-                      </UserLink>{' '}{info?.text}
-                    </p>
-                    <div className="flex shrink-0 items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-                      {dayjs(element.createdAt).fromNow()}
-                      {!element.isRead && <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>}
-                    </div>
-                  </div>
-
-                  <p className="mt-1 truncate text-gray-600 dark:text-gray-400">{element.entity.name ?? element.entity.body}</p>
-
-                  {element.isRead ? (
-                    <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-green-600 dark:text-green-400">
-                      <i className="fa-solid fa-check"></i> Read
-                    </p>
-                  ) : (
-                    <button
-                      onClick={() => handleisread(element._id)}
-                      className="mt-3 flex items-center gap-2 rounded-lg border border-blue-100 bg-white px-3 py-1.5 text-sm font-semibold text-blue-600 hover:bg-blue-50 dark:border-blue-900 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
-                    >
-                      <i className="fa-solid fa-check"></i> Mark as read
-                    </button>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+                Retry
+              </button>
+            </div>
+          ) : shownNotifications.length === 0 ? (
+            <p className="py-10 text-center text-gray-500 dark:text-gray-400">No notifications here.</p>
+          ) : (
+            shownNotifications.map((element) => (
+              <NotificationItem
+                key={element._id}
+                notification={element}
+                onMarkRead={handleisread}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

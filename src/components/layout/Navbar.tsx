@@ -1,128 +1,67 @@
-
-import {
-  Dropdown,
-  DropdownDivider,
-  DropdownItem,
-  Navbar as FlowNavbar,
-  
-  
-} from "flowbite-react";
-import { useContext } from "react";
-import { useLocation } from "react-router";
-import { Link, NavLink, useNavigate } from "react-router";
-import { AuthContext } from "../../context/AuthContext";
-
-
+import { Navbar as FlowNavbar } from 'flowbite-react'
+import { useContext } from 'react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router'
+import { AuthContext } from '../../context/AuthContext'
 import imglogo from '../../assets/route.png'
-import { useDarkMode } from "../../hooks/useDarkMode";
-import { useUnreadCount } from "../../hooks/useUnreadCount";
-import UserAvatar from "../ui/UserAvatar";
+import { useDarkMode } from '../../hooks/useDarkMode'
+import NavLinks from './NavLinks'
+import UserMenu from './UserMenu'
 
 export default function Navbar() {
-let { userData, setUserData, isLoading } = useContext(AuthContext)
-  const location = useLocation();
-  const hideNav = ['/Login', '/'].includes(location.pathname);
-  const showNav = !hideNav && !!userData;
-const { isDark, toggle } = useDarkMode()
-  let navg =useNavigate()
-function Logout(){
-  localStorage.removeItem('usertoken')
-setUserData(null)
-navg('/Login')
-}
-const { unreadCount: unreadcount } = useUnreadCount({ enabled: !!userData })
-  return (<>
-<div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
-  <div className="w-full px-3 md:px-[5%]">
-  <FlowNavbar fluid className="bg-transparent px-0 dark:bg-transparent">
+  const { userData, setUserData, isLoading } = useContext(AuthContext)
+  const location = useLocation()
+  const hideNav = ['/Login', '/'].includes(location.pathname)
+  const showNav = !hideNav && !!userData
+  const { isDark, toggle } = useDarkMode()
+  const navg = useNavigate()
 
-<div className="flex items-center justify-between w-full gap-4">
-      <Link to="/Feed" className="flex items-center">
-        <img src={imglogo} className="mr-3 h-6 sm:h-9 rounded-2xl" alt="Flowbite React Logo" />
-        <span className="hidden lg:inline self-center leading-tight lg:whitespace-nowrap text-[20px] font-bold dark:text-white">Route Posts</span>
-      </Link>
-
-      {showNav && (
-        <div>
-
-      <div className="flex items-center gap-1 rounded-full border border-gray-200 bg-[#F8FAFC] p-1 dark:border-gray-700 dark:bg-gray-800">
-      <NavLink
-  to="/Feed"
-  className={({ isActive }) =>
-    `flex items-center gap-2 rounded-2xl px-4 py-2 font-bold ${
-      isActive ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
-    }`
+  function Logout() {
+    localStorage.removeItem('usertoken')
+    setUserData(null)
+    navg('/Login')
   }
-><i className="fa-regular fa-house"></i><span className="hidden md:inline">Feed</span></NavLink>
-       <NavLink
-  to="/Profile"
-  className={({ isActive }) =>
-    `flex items-center gap-2 rounded-2xl px-4 py-2 font-bold ${
-      isActive ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
-    }`
-  }
-><i className="fa-regular fa-user"></i> <span className="hidden md:inline">Profile</span></NavLink>
-      <NavLink
-  to="/Notifications"
-  className={({ isActive }) =>
-    `flex items-center gap-2 rounded-2xl px-4 py-2 font-bold ${
-      isActive ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
-    }`
-  }
-><span className="relative">
-  <i className="fa-regular fa-comment"></i>
-  {unreadcount > 0 && (
-    <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
-      {unreadcount}
-    </span>
-  )}
-</span> <span className="hidden md:inline">Notifications</span></NavLink>
-      </div>
-      </div>
-      )}
 
-      <div className="flex items-center gap-2">
-        
-        <button
-          onClick={toggle}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-[#F8FAFC] text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-yellow-400 dark:hover:bg-gray-700"
-        >
-          <i className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
-        </button>
+  return (
+    <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
+      <div className="w-full px-3 md:px-[5%]">
+        <FlowNavbar fluid className="bg-transparent px-0 dark:bg-transparent">
+          <div className="flex w-full items-center justify-between gap-4">
+            <Link to="/Feed" className="flex items-center">
+              <img src={imglogo} className="mr-3 h-6 rounded-2xl sm:h-9" alt="Flowbite React Logo" />
+              <span className="hidden self-center text-[20px] leading-tight font-bold lg:inline lg:whitespace-nowrap dark:text-white">
+                Route Posts
+              </span>
+            </Link>
 
-{showNav ? <Dropdown
-          arrowIcon={false}
-          inline
-          label={
-            <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-[#F8FAFC] p-1 dark:border-gray-700 dark:bg-gray-800">
-            <UserAvatar alt="User settings" src={userData?.photo} />
-           <span className="hidden md:inline dark:text-white">{userData?.name}</span> <i className="fa-solid fa-bars text-gray-500 dark:text-gray-300"></i>
+            {showNav && <NavLinks />}
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggle}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-[#F8FAFC] text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-yellow-400 dark:hover:bg-gray-700"
+              >
+                <i className={isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
+              </button>
+
+              {showNav ? (
+                <UserMenu name={userData?.name} photo={userData?.photo} onLogout={Logout} />
+              ) : (
+                !isLoading &&
+                !hideNav && (
+                  <>
+                    <NavLink to="/" className="me-2 mt-1 dark:text-gray-200">
+                      Register
+                    </NavLink>
+                    <NavLink to="/Login" className="mt-1 dark:text-gray-200">
+                      Login
+                    </NavLink>
+                  </>
+                )
+              )}
             </div>
-          }
-        >
-
-        <DropdownItem as={NavLink} to="/Profile" className="gap-3">
-  <i className="fa-regular fa-user w-4"></i> Profile
-</DropdownItem>
-<DropdownItem as={NavLink} to="/ChangePassword" className="gap-3">
-  <i className="fa-solid fa-gear w-4"></i> Settings
-</DropdownItem>
-<DropdownDivider />
-<DropdownItem
-  onClick={Logout}
-  className="gap-3 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
->
-  Logout
-</DropdownItem>
-
-       </Dropdown> : !isLoading && !hideNav && <>
-  <NavLink to="/" className="me-2 mt-1 dark:text-gray-200">Register</NavLink>
-  <NavLink to="/Login" className="mt-1 dark:text-gray-200">Login</NavLink>
-</>}
+          </div>
+        </FlowNavbar>
       </div>
-
-    </div></FlowNavbar>
     </div>
-  </div>
- </> )
+  )
 }
