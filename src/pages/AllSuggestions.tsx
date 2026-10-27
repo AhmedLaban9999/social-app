@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
-import { Avatar } from 'flowbite-react'
 import { useState } from 'react';
 import { useAllSuggestions } from '../hooks/useAllSuggestions'
+import UserAvatar from '../components/ui/UserAvatar'
 
 
 export default function AllSuggestions() {
@@ -46,7 +46,7 @@ export default function AllSuggestions() {
           return  <div key={el._id} className="rounded-2xl border border-gray-200 p-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-3">
-                <Avatar img={el.photo} rounded size="md" />
+                <UserAvatar src={el.photo} size="md" />
                 <div className="min-w-0">
                   <p className="truncate font-bold text-gray-900">{el.name}</p>
                   <p className="truncate text-sm text-gray-500">{el.username}</p>

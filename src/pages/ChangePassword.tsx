@@ -3,6 +3,7 @@ import {useState} from 'react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useChangePassword } from '../hooks/useChangePassword';
+import FormField from '../components/ui/FormField';
 
 export default function ChangePassword() {
     const [successMsg, setSuccessMsg] = useState('')
@@ -52,43 +53,33 @@ function handleApi(values: passwordForm) {
 
         
         <form  onSubmit={handleSubmit(handleApi)} className="flex flex-col gap-5">
-          <div>
-            <label className="mb-2 block font-bold text-gray-800">Current password</label>
-            <input
+          <FormField
             {...register('password')}
-              type="password"
-              placeholder="Enter current password"
-              className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
-            />
-            {errors.password && <p className="mt-2 text-sm text-red-500">{errors.password.message}</p>}
-          </div>
+            variant="native"
+            label="Current password"
+            type="password"
+            placeholder="Enter current password"
+            error={errors.password?.message}
+          />
 
-          <div>
-            <label className="mb-2 block font-bold text-gray-800">New password</label>
-            <input
+          <FormField
             {...register('newPassword')}
-              type="password"
-              placeholder="Enter new password"
-              className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
-            />
-            {errors.newPassword?( <p className="mt-2 text-sm text-red-500">
-              {errors.newPassword.message}
-            </p>):( <p className="mt-2 text-sm text-gray-500">
-              At least 8 characters with uppercase, lowercase, number, and special character.
-            </p>)}
-           
-          </div>
+            variant="native"
+            label="New password"
+            type="password"
+            placeholder="Enter new password"
+            error={errors.newPassword?.message}
+            helperText="At least 8 characters with uppercase, lowercase, number, and special character."
+          />
 
-          <div>
-            <label className="mb-2 block font-bold text-gray-800">Confirm new password</label>
-            <input
+          <FormField
             {...register('rePassword')}
-              type="password"
-              placeholder="Re-enter new password"
-              className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 focus:border-blue-500 focus:ring-blue-500"
-            />
-            {errors.rePassword && <p className="mt-2 text-sm text-red-500">{errors.rePassword.message}</p>}
-          </div>
+            variant="native"
+            label="Confirm new password"
+            type="password"
+            placeholder="Re-enter new password"
+            error={errors.rePassword?.message}
+          />
 {successMsg && (
   <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-green-700">
     {successMsg}

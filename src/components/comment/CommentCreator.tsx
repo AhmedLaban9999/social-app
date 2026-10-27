@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Avatar } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import Swal from "sweetalert2";
 import { useCommentActions } from "../../hooks/useCommentActions";
 import { getApiErrorMessage } from "../../utils/getApiErrorMessage";
+import UserAvatar from "../ui/UserAvatar";
 
 interface CommentCreatorProps {
   name: string;
@@ -48,7 +48,7 @@ export default function CommentCreator({ name, photo ,postId,refetch}: CommentCr
   return (
     <div className="mx-4 mb-4">
       <div className="flex items-start gap-3">
-        <Avatar img={photo} rounded size="sm" />
+        <UserAvatar src={photo} size="sm" />
 
         <div className="flex-1 rounded-2xl border border-gray-200 bg-gray-100 px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
           <textarea

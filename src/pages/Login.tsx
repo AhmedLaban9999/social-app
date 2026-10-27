@@ -1,6 +1,6 @@
 
 
-import { Button, TextInput } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +9,7 @@ import { useNavigate, NavLink } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useAuthActions } from "../hooks/useAuthActions";
+import FormField from "../components/ui/FormField";
 
 
 
@@ -111,29 +112,23 @@ return (
         <p className="mt-1 mb-6 text-gray-500 dark:text-gray-400">Log in and continue your social journey.</p>
 
         <form onSubmit={handleSubmit(handleApi)} className="flex flex-col gap-4">
-          <div>
-            <TextInput
-              {...register('email')}
-              type="email"
-              placeholder="Email"
-              sizing="lg"
-              icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
-              color={errors.email ? 'failure' : 'gray'}
-            />
-            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
-          </div>
+          <FormField
+            {...register('email')}
+            type="email"
+            placeholder="Email"
+            sizing="lg"
+            icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
+            error={errors.email?.message}
+          />
 
-          <div>
-            <TextInput
-              {...register('password')}
-              type="password"
-              placeholder="Password"
-              sizing="lg"
-              icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
-              color={errors.password ? 'failure' : 'gray'}
-            />
-            {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
-          </div>
+          <FormField
+            {...register('password')}
+            type="password"
+            placeholder="Password"
+            sizing="lg"
+            icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
+            error={errors.password?.message}
+          />
 
           <Button type="submit" size="lg" className="w-full bg-blue-900 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
             Log In

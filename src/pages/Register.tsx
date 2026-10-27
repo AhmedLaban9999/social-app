@@ -1,10 +1,11 @@
-import { Button, Datepicker, TextInput, Select } from "flowbite-react";
+import { Button, Datepicker, Select } from "flowbite-react";
 import { useNavigate, NavLink } from "react-router";
 import { useForm } from "react-hook-form";
 import * as zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod';
 import Swal from 'sweetalert2'
 import { useAuthActions } from "../hooks/useAuthActions";
+import FormField from "../components/ui/FormField";
 
 
 
@@ -111,44 +112,55 @@ setTimeout(()=>{
 
           <form onSubmit={handleSubmit(handleApi)} className="flex flex-col gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <TextInput {...register('name')} placeholder="Full name" icon={() => <i className="fa-regular fa-user text-gray-400"></i>} color={errors.name ? 'failure' : 'gray'} />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>}
-              </div>
-              <div>
-                <TextInput {...register('username')} placeholder="Username" icon={() => <i className="fa-solid fa-at text-gray-400"></i>} color={errors.username ? 'failure' : 'gray'} />
-                {errors.username && <p className="mt-1 text-sm text-red-500">{errors.username.message}</p>}
-              </div>
+              <FormField
+                {...register('name')}
+                placeholder="Full name"
+                icon={() => <i className="fa-regular fa-user text-gray-400"></i>}
+                error={errors.name?.message}
+              />
+              <FormField
+                {...register('username')}
+                placeholder="Username"
+                icon={() => <i className="fa-solid fa-at text-gray-400"></i>}
+                error={errors.username?.message}
+              />
             </div>
 
-            <div>
-              <TextInput {...register('email')} type="email" placeholder="Email" icon={() => <i className="fa-regular fa-envelope text-gray-400"></i>} color={errors.email ? 'failure' : 'gray'} />
-              {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
-            </div>
+            <FormField
+              {...register('email')}
+              type="email"
+              placeholder="Email"
+              icon={() => <i className="fa-regular fa-envelope text-gray-400"></i>}
+              error={errors.email?.message}
+            />
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
+              <FormField error={errors.dateOfBirth?.message}>
                 <Datepicker onChange={(date) => { date && setValue('dateOfBirth', date) }} placeholder="Date of birth" />
-                {errors.dateOfBirth && <p className="mt-1 text-sm text-red-500">{errors.dateOfBirth.message}</p>}
-              </div>
-              <div>
+              </FormField>
+              <FormField error={errors.gender?.message}>
                 <Select {...register('gender')}>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </Select>
-                {errors.gender && <p className="mt-1 text-sm text-red-500">{errors.gender.message}</p>}
-              </div>
+              </FormField>
             </div>
 
-            <div>
-              <TextInput {...register('password')} type="password" placeholder="Password" icon={() => <i className="fa-solid fa-key text-gray-400"></i>} color={errors.password ? 'failure' : 'gray'} />
-              {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
-            </div>
+            <FormField
+              {...register('password')}
+              type="password"
+              placeholder="Password"
+              icon={() => <i className="fa-solid fa-key text-gray-400"></i>}
+              error={errors.password?.message}
+            />
 
-            <div>
-              <TextInput {...register('rePassword')} type="password" placeholder="Confirm password" icon={() => <i className="fa-solid fa-lock text-gray-400"></i>} color={errors.rePassword ? 'failure' : 'gray'} />
-              {errors.rePassword && <p className="mt-1 text-sm text-red-500">{errors.rePassword.message}</p>}
-            </div>
+            <FormField
+              {...register('rePassword')}
+              type="password"
+              placeholder="Confirm password"
+              icon={() => <i className="fa-solid fa-lock text-gray-400"></i>}
+              error={errors.rePassword?.message}
+            />
 
             <Button type="submit" size="lg" className="w-full bg-blue-900 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
               Create account

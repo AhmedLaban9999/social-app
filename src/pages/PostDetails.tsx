@@ -1,22 +1,14 @@
 import { Link, useParams } from 'react-router'
 import PostCard from '../components/post/PostCard'
 import type { Post } from '../types/posts'
-import {Bars} from 'react-loader-spinner'
 import { usePostDetails } from '../hooks/usePostDetails'
+import PageLoader from '../components/ui/PageLoader'
 export default function PostsDetails() {
     
     const{id}=useParams()
     const {isError,isLoading,error,data,refetch}=usePostDetails(id)
     if(isLoading){
-      return<Bars
-height="80"
-width="80"
-color="gray"
-ariaLabel="bars-loading"
-wrapperStyle={{}}
-wrapperClass=""
-visible={true}
-/>
+      return <PageLoader variant="bars" size={80} />
     }
     if(isError){
         return(

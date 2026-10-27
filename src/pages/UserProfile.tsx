@@ -1,9 +1,9 @@
 import { useParams } from 'react-router'
-import { Avatar } from 'flowbite-react'
-import PostCard from '../components/post/PostCard'
 import { useUserProfile } from '../hooks/useUserProfile'
 import { useFollowUser } from '../hooks/useFollowUser'
 import { useUserPosts } from '../hooks/useUserPosts'
+import UserAvatar from '../components/ui/UserAvatar'
+import PostList from '../components/post/PostList'
 
 export default function UserProfile() {
     
@@ -32,7 +32,7 @@ if (!user) return null
    
         <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-start">
           <div className="rounded-full border-4 border-white bg-white shadow-sm">
-            <Avatar img={user.photo} rounded size="xl" />
+            <UserAvatar src={user.photo} size="xl" />
           </div>
           <div>
             <h1 className="text-3xl font-extrabold text-gray-900">{user.name}</h1>
@@ -56,9 +56,7 @@ if (!user) return null
   </div>
 
   <div className="mt-6 flex flex-col gap-6">
-    {posts.map((post) => (
-      <PostCard key={post._id} element={post} />
-    ))}
+    <PostList posts={posts} />
   </div>
 </div>
 )

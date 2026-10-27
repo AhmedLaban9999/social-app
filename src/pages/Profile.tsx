@@ -1,10 +1,16 @@
 import { useContext,useState } from 'react'
-import { Avatar } from 'flowbite-react'
 import { AuthContext } from '../context/AuthContext'
-import PostCard from '../components/post/PostCard'
 import { useUserPosts } from '../hooks/useUserPosts'
 import { useBookmarks } from '../hooks/useBookmarks'
 import { useProfileUpload } from '../hooks/useProfileUpload'
+import UserAvatar from '../components/ui/UserAvatar'
+import TabBar from '../components/ui/TabBar'
+import PostList from '../components/post/PostList'
+
+const profileTabs = [
+  { key: 'posts', label: 'My Posts', icon: 'fa-regular fa-file-lines' },
+  { key: 'saved', label: 'Saved', icon: 'fa-regular fa-bookmark' },
+]
 
 
 export default function Profile() {
@@ -64,7 +70,7 @@ export default function Profile() {
             onClick={() => setShowPhoto(true)}
             className="cursor-pointer rounded-full border-4 border-blue-100 bg-white p-1 dark:border-gray-700 dark:bg-gray-800"
           >
-            <Avatar img={userData.photo} rounded size="xl" />
+            <UserAvatar src={userData.photo} size="xl" />
           </div>
 
           <button
@@ -150,26 +156,15 @@ export default function Profile() {
   </div>
 )}
 
-<div className="mt-6 flex items-center justify-between rounded-3xl border border-gray-100 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-  <div className="flex gap-1 rounded-2xl bg-slate-100 p-1 dark:bg-gray-900">
-    <button onClick={() => setActiveTab('posts')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${activeTab == 'posts' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
-      <i className="fa-regular fa-file-lines"></i> My Posts
-    </button>
-    <button onClick={() => setActiveTab('saved')} className={`flex items-center gap-2 rounded-xl px-4 py-2 font-semibold ${activeTab == 'saved' ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-700 dark:text-blue-400' : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'}`}>
-      <i className="fa-regular fa-bookmark"></i> Saved
-    </button>
-  </div>
-
-  <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-bold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">{activeTab === 'posts' ? myposts.length : bookmarks.length}</span>
-</div>
+<TabBar
+  tabs={profileTabs}
+  active={activeTab}
+  onChange={setActiveTab}
+  badge={activeTab === 'posts' ? myposts.length : bookmarks.length}
+/>
 
 <div className="mt-6 flex flex-col gap-6">
-  {activeTab === 'posts' && myposts.map((post) => (
-    <PostCard key={post._id} element={post} />
-  ))}
-  {activeTab === 'saved' && bookmarks.map((post) => (
-    <PostCard key={post._id} element={post} />
-  ))}
+  <PostList posts={activeTab === 'posts' ? myposts : bookmarks} />
 </div>
     </div>
   </>)

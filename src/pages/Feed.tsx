@@ -1,14 +1,15 @@
 
-import PostCard from '../components/post/PostCard'
 import {useContext ,useState} from 'react'
 import { AuthContext } from '../context/AuthContext'
 import type { Post } from '../types/posts'
 import CreatePost from '../components/post/CreatePost'
-import { ThreeDots } from 'react-loader-spinner'
 import SuggestedFriends from '../components/friends/SuggestedFriends';
 import { usePosts } from '../hooks/usePosts'
 import { useUserPosts } from '../hooks/useUserPosts'
 import { useBookmarks } from '../hooks/useBookmarks'
+import PageLoader from '../components/ui/PageLoader'
+import TabBar from '../components/ui/TabBar'
+import PostList from '../components/post/PostList'
 
 const tabs = [
   { key: 'feed', label: 'Feed', icon: 'fa-regular fa-newspaper' },
@@ -26,9 +27,7 @@ export default function Feed() {
   const { bookmarks: savedPosts } = useBookmarks({ enabled: !!userData })
 
   if (isLoading) {
-    return (
-      <ThreeDots height="80" width="80" color="#2563eb" ariaLabel="three-dots-loading" visible={true} />
-    )
+    return <PageLoader variant="dots" size={80} />
   }
 
   if (isError) {
@@ -42,29 +41,12 @@ if (activeTab === 'saved') shownPosts = savedPosts
 return (<> <title>Feed</title>
   <div className="mx-auto grid w-full  max-w-7xl gap-6 px-2 sm:px-4 py-6 lg:grid-cols-[260px_1fr] xl:grid-cols-[260px_1fr_340px]">
  
- <nav className="hidden lg:block self-start sticky top-24 rounded-3xl bg-white p-3 shadow-sm dark:bg-gray-800">
-  {tabs.map((tab) => (
-    <button
-      key={tab.key}
-      onClick={() => setActiveTab(tab.key)}
-      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 font-semibold ${
-        activeTab === tab.key
-          ? 'bg-blue-50 text-blue-600 dark:bg-gray-700 dark:text-blue-400'
-          : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-      }`}
-    >
-      <i className={tab.icon}></i>
-      {tab.label}
-    </button>
-  ))}
-</nav>
+  <TabBar tabs={tabs} active={activeTab} onChange={setActiveTab} variant="sidebar" />
 
   
     <div className="flex min-w-0 flex-col gap-6 ">
    {userData && <CreatePost name={userData.name} photo={userData.photo} />}
-{shownPosts?.map((el) => (
-  <PostCard key={el._id} element={el} />
-))}
+   <PostList posts={shownPosts} />
     </div>
 
 

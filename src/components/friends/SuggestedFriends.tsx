@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Avatar } from "flowbite-react";
 import { Link } from "react-router";
 import { useSuggestions } from "../../hooks/useSuggestions";
 import { useFollowUser } from "../../hooks/useFollowUser";
+import UserAvatar from "../ui/UserAvatar";
 
 
 
@@ -41,7 +41,7 @@ export default function SuggestedFriends() {
           <div key={friend._id} className="rounded-2xl border border-gray-200 px-3 py-2.5 dark:border-gray-700">
             <div className="flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-3">
-                <Avatar img={friend.photo} rounded size="sm" />
+                <UserAvatar src={friend.photo} size="sm" />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{friend.name}</p>
                   <p className="truncate text-sm text-gray-500 dark:text-gray-400">@{friend.username}</p>

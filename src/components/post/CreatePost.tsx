@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Avatar, Button, Card, Dropdown, DropdownItem, Textarea } from "flowbite-react";
+import { Button, Card, Dropdown, DropdownItem, Textarea } from "flowbite-react";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import Swal from "sweetalert2";
 import { useCreatePost } from "../../hooks/useCreatePost";
+import UserAvatar from "../ui/UserAvatar";
 
 
 interface CreatePostProps {
@@ -52,7 +53,7 @@ const [picture,setpicture]=useState<File | null>(null)
     <Card className="w-full max-w-2xl">
     
       <div className="flex items-center gap-3">
-        <Avatar img={photo} rounded size="md" />
+        <UserAvatar src={photo} size="md" />
         <div>
           <p className="font-bold text-gray-900 dark:text-white">{name}</p>
           <Dropdown

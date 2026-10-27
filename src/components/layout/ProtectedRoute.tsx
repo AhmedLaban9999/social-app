@@ -3,7 +3,7 @@ import { Navigate } from 'react-router'
 import type { ReactNode } from 'react'
 import { useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext'
-import { ThreeDots } from 'react-loader-spinner'
+import PageLoader from '../ui/PageLoader'
 
 interface Props {
   children: ReactNode
@@ -15,11 +15,7 @@ export default function ProtectedRoute({ children }: Props) {
   const { isLoading, userData } = useContext(AuthContext)
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <ThreeDots height="60" width="60" color="#2563eb" ariaLabel="loading" visible />
-      </div>
-    )
+    return <PageLoader variant="dots" size={60} fullScreen />
   }
 
   const token = localStorage.getItem('usertoken')

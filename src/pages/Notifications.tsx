@@ -1,10 +1,10 @@
-import { Avatar } from 'flowbite-react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { useNotifications } from '../hooks/useNotifications'
 import { useUnreadCount } from '../hooks/useUnreadCount'
+import UserAvatar from '../components/ui/UserAvatar'
 
 dayjs.extend(relativeTime)
 
@@ -83,7 +83,7 @@ export default function Notifications() {
                 }`}
               >
                 <div className="relative h-fit shrink-0">
-                  <Avatar img={element.actor.photo} rounded size="md" />
+                  <UserAvatar src={element.actor.photo} size="md" />
                   <span className={`absolute -right-1 -bottom-6 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs shadow-sm dark:bg-gray-700 ${info?.color}`}>
                     <i className={info?.icon}></i>
                   </span>

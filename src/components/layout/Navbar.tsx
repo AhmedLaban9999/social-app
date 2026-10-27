@@ -1,6 +1,5 @@
 
 import {
-  Avatar,
   Dropdown,
   DropdownDivider,
   DropdownItem,
@@ -17,6 +16,7 @@ import { AuthContext } from "../../context/AuthContext";
 import imglogo from '../../assets/route.png'
 import { useDarkMode } from "../../hooks/useDarkMode";
 import { useUnreadCount } from "../../hooks/useUnreadCount";
+import UserAvatar from "../ui/UserAvatar";
 
 export default function Navbar() {
 let { userData, setUserData, isLoading } = useContext(AuthContext)
@@ -95,7 +95,7 @@ const { unreadCount: unreadcount } = useUnreadCount({ enabled: !!userData })
           inline
           label={
             <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-[#F8FAFC] p-1 dark:border-gray-700 dark:bg-gray-800">
-            <Avatar alt="User settings" img={userData?.photo} rounded />
+            <UserAvatar alt="User settings" src={userData?.photo} />
            <span className="hidden md:inline dark:text-white">{userData?.name}</span> <i className="fa-solid fa-bars text-gray-500 dark:text-gray-300"></i>
             </div>
           }

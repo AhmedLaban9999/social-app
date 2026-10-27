@@ -1,4 +1,4 @@
-import { Button,Avatar } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { useState ,useContext} from "react";
 import type { Post } from "../../types/posts";
 import CommentCreator from "../comment/CommentCreator";
@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import CommentCard from "../comment/CommentCard";
 import { usePostActions } from "../../hooks/usePostActions";
 import { useComments } from "../../hooks/useComments";
+import UserAvatar from "../ui/UserAvatar";
 
 
 
@@ -84,7 +85,7 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
         <div className="mx-4 mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
           <p className="mb-3 text-xs font-semibold text-gray-500 dark:text-gray-400">Top comment</p>
           <div className="flex items-start gap-3">
-            <Avatar img={topComment?.commentCreator.photo} rounded size="sm" />
+            <UserAvatar src={topComment?.commentCreator.photo} size="sm" />
             <div className="flex-1 rounded-2xl bg-white px-4 py-2 dark:bg-gray-700">
               <p className="text-sm font-bold text-gray-900 dark:text-white">{topComment.commentCreator.name}</p>
               <p className="text-gray-700 dark:text-gray-200">{topComment.content}</p>

@@ -1,7 +1,8 @@
-import { Avatar, Dropdown, DropdownItem } from "flowbite-react";
+import { Dropdown, DropdownItem } from "flowbite-react";
 import type { CommentItem } from "../../types/comment";
 import dayjs from "dayjs";
 import { useContext, useEffect, useRef, useState } from "react";
+import UserAvatar from "../ui/UserAvatar";
 
 import { AuthContext } from "../../context/AuthContext";
 import { useCommentActions } from "../../hooks/useCommentActions";
@@ -67,7 +68,7 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
   }
   return (
     <div className="flex items-start gap-3">
-      <Avatar img={comment.commentCreator.photo} rounded size="sm" />
+      <UserAvatar src={comment.commentCreator.photo} size="sm" />
 
       <div className="min-w-0 flex-1">
       
@@ -127,7 +128,7 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
          {replies.map((reply)=>{
             return(
                  <div   key={reply._id} className="flex items-start gap-2">
-            <Avatar img={reply.commentCreator.photo} rounded size="xs" />
+            <UserAvatar src={reply.commentCreator.photo} size="xs" />
             <div className="min-w-0 flex-1">
               <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-3 py-2">
                 <p className="text-xs font-bold text-gray-900">{reply.commentCreator.name}</p>
@@ -144,7 +145,7 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
 
 
           <div className="flex items-start gap-2">
-            <Avatar img={ userData?.photo} rounded size="xs" />
+            <UserAvatar src={userData?.photo} size="xs" />
             <div className="flex flex-1 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-1.5">
               <input
               onChange={(e)=>setreplytext(e.target.value) }
