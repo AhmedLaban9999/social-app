@@ -1,52 +1,38 @@
 import { Button } from "flowbite-react";
-import { useState ,useContext} from "react";
+import { useState, useContext } from "react";
 import type { Post } from "../../types/posts";
-import CommentCreator from "../comment/CommentCreator";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router";
 import dayjs from "dayjs";
-import CommentCard from "../comment/CommentCard";
 import { usePostActions } from "../../hooks/usePostActions";
-import { useComments } from "../../hooks/useComments";
 import UserAvatar from "../ui/UserAvatar";
 import UserLink from "../ui/UserLink";
+import CommentSection from "../comment/CommentSection";
 
+export default function PostFooter({ postdetail }: { postdetail: Post }) {
+  const { userData } = useContext(AuthContext);
+  const { likesCount, commentsCount, sharesCount, topComment, _id, likes, user } = postdetail;
+  const [showComments, setShowComments] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [shareText, setShareText] = useState("");
 
+  const { toggleLike, sharePost } = usePostActions(_id);
 
+  const mutate = (_postId?: string) => toggleLike.mutate();
+  const isPending = toggleLike.isPending;
+  const isSharing = sharePost.isPending;
 
-export default function PostFooter({postdetail}:{postdetail:Post}) {
-    const { userData } = useContext(AuthContext);
-    const {likesCount,commentsCount,sharesCount,topComment,_id,likes,user}=postdetail
-    const [showComments, setShowComments] = useState(false)
-    const [showShare, setShowShare] = useState(false)
-    const [shareText, setShareText] = useState('')
+  const handleShare = () => {
+    sharePost.mutate(shareText, {
+      onSuccess: () => {
+        setShareText("");
+        setShowShare(false);
+      },
+    });
+  };
 
-    const { toggleLike, sharePost } = usePostActions(_id)
-    const { comments: commentlist, refetch: refetchComments } = useComments(_id, { enabled: showComments })
-
-    const mutate = (_postId?: string) => toggleLike.mutate()
-    const isPending = toggleLike.isPending
-    const isSharing = sharePost.isPending
-
-    function getPostComment(_idParam?: string) {
-      if (!showComments) {
-        setShowComments(true)
-      } else {
-        refetchComments()
-      }
-    }
-
-    const handleShare = () => {
-      sharePost.mutate(shareText, {
-        onSuccess: () => {
-          setShareText('')
-          setShowShare(false)
-        },
-      })
-    }
   return (
     <>
-      
       <div className="px-4 pb-4">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-300">
           <span className="flex items-center gap-1.5 whitespace-nowrap">
@@ -58,19 +44,18 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
           <span className="flex items-center gap-1.5 whitespace-nowrap">
             <i className="fa-regular fa-comment text-blue-600 dark:text-blue-400"></i> {commentsCount} comments
           </span>
-          <Link to={'/PostsDetails/' + _id} className="ms-auto whitespace-nowrap font-semibold text-blue-600 hover:underline dark:text-blue-400">
+          <Link to={"/PostsDetails/" + _id} className="ms-auto whitespace-nowrap font-semibold text-blue-600 hover:underline dark:text-blue-400">
             View details
           </Link>
         </div>
 
         <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400">
-          <i className="fa-regular fa-clock"></i> {dayjs(postdetail.createdAt).format('MMM D, h:mm A')}
+          <i className="fa-regular fa-clock"></i> {dayjs(postdetail.createdAt).format("MMM D, h:mm A")}
         </p>
       </div>
 
-      
       <div className="mx-2 sm:mx-4 flex gap-2 border-t border-gray-200 py-2 dark:border-gray-700">
-        <Button onClick={() => mutate(_id)} disabled={isPending} color="light" className={`flex-1 border-0 ${userData && likes.includes(userData._id) ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-white text-gray-600 dark:bg-transparent dark:text-gray-300'} hover:bg-blue-100 dark:hover:bg-gray-700`}>
+        <Button onClick={() => mutate(_id)} disabled={isPending} color="light" className={`flex-1 border-0 ${userData && likes.includes(userData._id) ? "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" : "bg-white text-gray-600 dark:bg-transparent dark:text-gray-300"} hover:bg-blue-100 dark:hover:bg-gray-700`}>
           <i className="fa-regular fa-thumbs-up sm:me-2"></i> <span className="hidden sm:inline">Like</span>
         </Button>
         <Button color="light" className="flex-1 border-0 dark:bg-transparent dark:text-gray-300 dark:hover:bg-gray-700">
@@ -81,8 +66,7 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
         </Button>
       </div>
 
-     
-      {topComment && !commentlist?.length && (
+      {topComment && !showComments && (
         <div className="mx-4 mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
           <p className="mb-3 text-xs font-semibold text-gray-500 dark:text-gray-400">Top comment</p>
           <div className="flex items-start gap-3">
@@ -94,35 +78,14 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
               <p className="text-gray-700 dark:text-gray-200">{topComment.content}</p>
             </div>
           </div>
-          <button onClick={() => getPostComment(_id)} className="mt-3 text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">
+          <button onClick={() => setShowComments(true)} className="mt-3 text-sm font-semibold text-blue-600 hover:underline dark:text-blue-400">
             View all comments
           </button>
         </div>
       )}
 
-    
-      <div className="mx-2 sm:mx-4 mb-4 rounded-2xl bg-slate-50 p-3 dark:bg-gray-900">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-3 sm:px-4 dark:border-gray-700 dark:bg-gray-800">
-          <h3 className="flex items-center gap-2 font-bold text-gray-900 dark:text-white">
-            Comments
-            <span className="rounded-full bg-blue-50 px-2 text-xs font-bold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">{commentlist?.length ?? 0}</span>
-          </h3>
-          <select className="rounded-xl border border-gray-200 bg-slate-50 py-1.5 ps-2 pe-7 text-xs font-semibold text-gray-700 focus:border-blue-500 focus:ring-blue-500 sm:py-2 sm:ps-3 sm:pe-8 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200">
-            <option>Most relevant</option>
-            <option>Newest</option>
-          </select>
-        </div>
+      <CommentSection postId={_id} enabled={showComments} onOpen={() => setShowComments(true)} />
 
-        <div className="flex flex-col gap-4">
-          {commentlist?.map((comment) => (
-            <CommentCard key={comment._id} comment={comment} postId={_id} refetch={() => getPostComment(_id)} />
-          ))}
-        </div>
-      </div>
-
-      {userData && <CommentCreator name={userData.name} photo={userData.photo} postId={_id} refetch={() => getPostComment(_id)} />}
-
-    
       {showShare && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl dark:bg-gray-800">
@@ -153,5 +116,5 @@ export default function PostFooter({postdetail}:{postdetail:Post}) {
         </div>
       )}
     </>
-  )
+  );
 }

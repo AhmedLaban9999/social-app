@@ -1,54 +1,32 @@
-import { Dropdown, DropdownItem } from "flowbite-react";
-import type { CommentItem } from "../../types/comment";
-import dayjs from "dayjs";
-import { useContext, useEffect, useRef, useState } from "react";
-import UserAvatar from "../ui/UserAvatar";
-import UserLink from "../ui/UserLink";
-
-import { AuthContext } from "../../context/AuthContext";
-import { useCommentActions } from "../../hooks/useCommentActions";
-import { useReplies } from "../../hooks/useReplies";
-import { useCreateReply } from "../../hooks/useCreateReply";
-
+import { Dropdown, DropdownItem } from 'flowbite-react'
+import dayjs from 'dayjs'
+import { useContext, useState } from 'react'
+import type { CommentItem } from '../../types/comment'
+import { AuthContext } from '../../context/AuthContext'
+import { useCommentActions } from '../../hooks/useCommentActions'
+import UserAvatar from '../ui/UserAvatar'
+import UserLink from '../ui/UserLink'
+import ReplyList from './ReplyList'
 
 interface CommentCardProps {
-  comment: CommentItem;
-  postId: string;
-   refetch: () => void;
+  comment: CommentItem
+  postId: string
+  refetch: () => void
 }
+
 export default function CommentCard({ comment, postId, refetch }: CommentCardProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [edittext,setedittext]=useState('')
-  const inputelement =useRef<HTMLInputElement>(null)
-    const [showreplies,setreplies]=useState(false)
-    const [replytext,setreplytext]=useState('')
-    const { userData } = useContext(AuthContext)
-    useEffect(() => {
-  if (showreplies) inputelement.current?.focus()
-}, [showreplies])
+  const [editText, setEditText] = useState('')
+  const [showReplies, setShowReplies] = useState(false)
+  const { userData } = useContext(AuthContext)
 
   const { editComment, deleteComment, likeComment } = useCommentActions(postId)
-  const { replies, refetch: refetchReplies } = useReplies(postId, comment._id, { enabled: showreplies })
-  const createReplyMutation = useCreateReply(postId, comment._id)
 
   const handleLikeComment = (commentId: string) => {
-    likeComment.mutate(commentId, {
-      onSuccess: () => {
-        refetchReplies()
-      },
-    })
+    likeComment.mutate(commentId)
   }
 
-  const handlecreateReply = (text: string) => {
-    createReplyMutation.mutate(text, {
-      onSuccess: () => {
-        setreplytext('')
-        refetchReplies()
-      },
-    })
-  }
-
-  const handledeletecomment = () => {
+  const handleDeleteComment = () => {
     deleteComment.mutate(comment._id, {
       onSuccess: () => {
         refetch()
@@ -56,9 +34,9 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
     })
   }
 
-  const handleupdatecomment = () => {
+  const handleUpdateComment = () => {
     editComment.mutate(
-      { commentId: comment._id, content: edittext },
+      { commentId: comment._id, content: editText },
       {
         onSuccess: () => {
           setIsEditing(false)
@@ -67,106 +45,103 @@ export default function CommentCard({ comment, postId, refetch }: CommentCardPro
       },
     )
   }
+
   return (
     <div className="flex items-start gap-3">
       <UserAvatar src={comment.commentCreator.photo} size="sm" userId={comment.commentCreator._id} />
 
       <div className="min-w-0 flex-1">
-      
         <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-4 py-3">
           <UserLink userId={comment.commentCreator._id} className="block text-sm font-bold text-gray-900">
             {comment.commentCreator.name}
           </UserLink>
-          <p className="text-xs text-gray-500">@{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}</p>
-         {comment.image && <img src={comment.image} alt="comment" className="mt-2 max-h-60 rounded-xl object-cover" />}
-         {isEditing ? (
-  <div className="mt-2">
-    <input
-      value={edittext}
-      onChange={(e) => setedittext(e.target.value)}
-      className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-    />
-    <div className="mt-2 flex justify-end gap-2">
-      <button onClick={() => setIsEditing(false)} className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200">
-        Cancel
-      </button>
-      <button  onClick={() => handleupdatecomment()}  className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700">
-        Save
-      </button>
-    </div>
-  </div>
-) : (
-  <p className="mt-1 text-gray-800">{comment.content}</p>
-)}
+          <p className="text-xs text-gray-500">
+            @{comment.commentCreator.username} · {dayjs(comment.createdAt).format('MMM D, h:mm A')}
+          </p>
+          {comment.image && (
+            <img src={comment.image} alt="comment" className="mt-2 max-h-60 rounded-xl object-cover" />
+          )}
+          {isEditing ? (
+            <div className="mt-2">
+              <input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="rounded-full px-3 py-1 text-xs font-semibold text-gray-600 hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUpdateComment}
+                  className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-1 text-gray-800">{comment.content}</p>
+          )}
         </div>
 
-      
         <div className="mt-1 flex items-center justify-between ps-1 text-xs">
           <div className="flex items-center gap-4 text-gray-500">
             <span>{dayjs(comment.createdAt).format('MMM D, h:mm A')}</span>
-            <button onClick={() => handleLikeComment(comment._id)}  className="font-semibold hover:text-blue-600">Like ({comment.likes.length})</button>
-            <button onClick={()=>setreplies(true)} className="font-semibold hover:text-blue-600">Reply</button>
+            <button
+              onClick={() => handleLikeComment(comment._id)}
+              className="font-semibold hover:text-blue-600"
+            >
+              Like ({comment.likes.length})
+            </button>
+            <button
+              onClick={() => setShowReplies((prev) => !prev)}
+              className="font-semibold hover:text-blue-600"
+            >
+              Reply
+            </button>
           </div>
-{comment.commentCreator._id === userData?._id &&         <Dropdown
-  inline
-  arrowIcon={false}
-  label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600"></i>}
->
-  <DropdownItem onClick={() => { setIsEditing(true); setedittext(comment.content) }}>
-    <i className="fa-solid fa-pen me-3 w-4"></i> Edit
-  </DropdownItem>
-  <DropdownItem onClick={()=>handledeletecomment()} className="text-red-600 hover:bg-red-50">
-    <i className="fa-regular fa-trash-can me-3 w-4"></i> Delete
-  </DropdownItem>
-</Dropdown>}
+          {comment.commentCreator._id === userData?._id && (
+            <Dropdown
+              inline
+              arrowIcon={false}
+              label={<i className="fa-solid fa-ellipsis text-gray-400 hover:text-gray-600"></i>}
+            >
+              <DropdownItem
+                onClick={() => {
+                  setIsEditing(true)
+                  setEditText(comment.content)
+                }}
+              >
+                <i className="fa-solid fa-pen me-3 w-4"></i> Edit
+              </DropdownItem>
+              <DropdownItem onClick={handleDeleteComment} className="text-red-600 hover:bg-red-50">
+                <i className="fa-regular fa-trash-can me-3 w-4"></i> Delete
+              </DropdownItem>
+            </Dropdown>
+          )}
         </div>
 
-
-       {showreplies &&  <div className="mt-3 flex flex-col gap-3 border-s-2 border-gray-200 ps-4">
-          <button className="w-fit text-xs font-semibold text-blue-600 hover:underline">
-            <i className="fa-solid fa-reply me-1 rotate-180"></i> View {replies.length} replies
+        {(comment.repliesCount > 0 || showReplies) && (
+          <button
+            onClick={() => setShowReplies((prev) => !prev)}
+            className="mt-2 w-fit text-xs font-semibold text-blue-600 hover:underline"
+          >
+            <i className="fa-solid fa-reply me-1 rotate-180"></i>{' '}
+            {showReplies ? 'Hide replies' : `View ${comment.repliesCount} replies`}
           </button>
+        )}
 
-       
-         {replies.map((reply)=>{
-            return(
-                 <div   key={reply._id} className="flex items-start gap-2">
-            <UserAvatar src={reply.commentCreator.photo} size="xs" userId={reply.commentCreator._id} />
-            <div className="min-w-0 flex-1">
-              <div className="w-fit max-w-full rounded-2xl bg-gray-100 px-3 py-2">
-                <UserLink userId={reply.commentCreator._id} className="block text-xs font-bold text-gray-900">
-                  {reply.commentCreator.name}
-                </UserLink>
-                <p className="text-sm text-gray-800">{reply.content}</p>
-              </div>
-              <div className="mt-1 flex items-center gap-4 ps-1 text-xs text-gray-500">
-                <span>{dayjs(reply.createdAt).format('MMM D, h:mm A')}</span>
-                <button className="font-semibold hover:text-blue-600">Like ({reply.likes.length})</button>
-              </div>
-            </div>
-          </div>
-            )
-         })}
-
-
-          <div className="flex items-start gap-2">
-            <UserAvatar src={userData?.photo} size="xs" />
-            <div className="flex flex-1 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-1.5">
-              <input
-              onChange={(e)=>setreplytext(e.target.value) }
-              value={replytext}
-              ref={inputelement}
-                type="text"
-                placeholder={`Reply to ${comment.commentCreator.name}...`}
-                className="flex-1 border-0 bg-transparent p-0 text-sm focus:ring-0 focus:outline-none"
-              />
-              <button onClick={() => handlecreateReply(replytext)} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs text-white hover:bg-blue-700">
-                <i className="fa-regular fa-paper-plane"></i>
-              </button>
-            </div>
-          </div>
-        </div>}
+        <ReplyList
+          postId={postId}
+          commentId={comment._id}
+          commentAuthorName={comment.commentCreator.name}
+          enabled={showReplies}
+        />
       </div>
     </div>
-  );
+  )
 }
