@@ -3,6 +3,7 @@ import { useContext, useState } from 'react'
 import type { Post } from '../../types/posts'
 import { AuthContext } from '../../context/AuthContext'
 import { usePostActions } from '../../hooks/usePostActions'
+import PhotoLightbox from '../profile/PhotoLightbox'
 import PostFooter from './PostFooter'
 import PostHeader from './PostHeader'
 import PostEditForm from './PostEditForm'
@@ -27,6 +28,10 @@ export default function PostCard({ element }: PostCardProps) {
   const { deletePost, editPost, toggleBookmark } = usePostActions(_id)
   const [isEditing, setIsEditing] = useState(false)
   const [editText, setEditText] = useState('')
+  const [showLightbox, setShowLightbox] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
+
+  const imageAlt = body?.trim() || 'Post image'
 
   const handleUpdate = () =>
     editPost.mutate(editText, { onSuccess: () => setIsEditing(false) })
@@ -63,7 +68,33 @@ export default function PostCard({ element }: PostCardProps) {
         body && <p className="px-4 pb-3 text-gray-800 dark:text-gray-200">{body}</p>
       )}
 
-      {image && <img src={image} alt="post" className="w-full object-cover" />}
+      {image && (
+        <>
+          <button
+            type="button"
+            aria-label="View image"
+            onClick={() => setShowLightbox(true)}
+            className={`block w-full cursor-zoom-in bg-gray-50 dark:bg-gray-900 ${
+              imgLoaded ? '' : 'min-h-48 animate-pulse'
+            }`}
+          >
+            <img
+              src={image}
+              alt={imageAlt}
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setImgLoaded(true)}
+              className="max-h-[420px] w-full object-contain sm:max-h-[520px]"
+            />
+          </button>
+          <PhotoLightbox
+            src={image}
+            alt={imageAlt}
+            open={showLightbox}
+            onClose={() => setShowLightbox(false)}
+          />
+        </>
+      )}
 
       {sharedPost && <SharedPostPreview sharedPost={sharedPost} />}
 
