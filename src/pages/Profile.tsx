@@ -37,7 +37,7 @@ export default function Profile() {
 
   return ( <>
    <title>Profile</title>
-    <div className="mx-auto w-full max-w-6xl px-2 py-8 sm:px-4">
+    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
       <ProfileBanner
         user={userData}
         editable
@@ -62,7 +62,7 @@ export default function Profile() {
   badge={activeTab === 'posts' ? myposts.length : bookmarks.length}
 />
 
-<div className="mx-auto mt-6 flex w-full max-w-2xl flex-col gap-6">
+<div className="mt-6 flex flex-col gap-6">
   <PostList
     posts={activeTab === 'posts' ? myposts : bookmarks}
     emptyMessage={activeTab === 'saved' ? 'No saved posts yet.' : "You haven't posted yet."}

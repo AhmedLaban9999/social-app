@@ -150,7 +150,7 @@ export default function ProfileBanner({
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        <div className="mt-6 grid items-start gap-4 lg:grid-cols-3">
           <div className="rounded-2xl border border-gray-200 bg-slate-50 p-5 lg:col-span-2 dark:border-gray-700 dark:bg-gray-900">
             <h2 className="mb-3 font-bold text-gray-900 dark:text-white">About</h2>
             <p className="flex items-center gap-3 break-all text-gray-600 dark:text-gray-300">
